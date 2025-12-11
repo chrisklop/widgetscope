@@ -1,0 +1,15 @@
+# Vercel
+.vercel
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+*.swp
+*.swo
+.idea/
+.vscode/
+
+# Local config (users should not commit their credentials)
+config.json
