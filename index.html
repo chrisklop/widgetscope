@@ -2631,11 +2631,26 @@ document.getElementById('openChat').onclick = function() {
 
         // Widget initialization
         function initWidget() {
+            // Check if credentials are configured
+            const config = getWidgetConfig();
+            if (!config.guid || !config.bind) {
+                debugTools.addLog('events', 'Widget not configured - waiting for credentials', null, 'warning');
+                debugTools.updateStatus('Not Configured', '#ffc107');
+                debugTools.updateWidgetState('Not Configured', false);
+                debugTools.updateScriptState('Waiting', false);
+                return;
+            }
+
             debugTools.addLog('events', 'Starting widget init...', null, 'info');
             debugTools.updateStatus('Loading...', '#ffc107');
 
             try {
                 var e = document.getElementById("divicw");
+                if (!e) {
+                    debugTools.addLog('console', 'Widget container not found', null, 'error');
+                    return;
+                }
+
                 var t = document.createElement("script");
                 t.src = "https://media.imi.chat/widget/js/imichatinit.js?t=" + new Date().toISOString();
 
