@@ -156,21 +156,56 @@ Lifecycle events like script loading, DOM mutations, and state changes.
 
 ### Right Column - WebSocket & MQTT Monitors
 
-A dedicated split panel for real-time connection monitoring:
+A dedicated split panel for real-time connection monitoring with **deep packet inspection**:
 
 #### WebSocket Monitor (top)
-- **Active connections** - Currently open WebSocket connections
-- **Message counts** - Sent/received message totals
-- **Zombie detection** - Flags connections that appear open but have no activity for 60+ seconds
-- **Event log** - Real-time log of open, close, error, and message events
+
+**Quick Stats Row:**
+- Active connections, total opened, sent/received counts, zombie count
+
+**Toolbar:**
+- **Filter buttons** - All, Sent, Received, Open/Close
+- **Search** - Filter entries by content
+- **Clear** - Reset the log
+
+**Expandable Log Entries:**
+Click any entry to expand and see full details:
+- **Metadata** - WS ID, timestamp, data type, size, URL, MQTT flag
+- **Payload View** - Tabbed interface with:
+  - **Formatted** - JSON syntax highlighted with color coding
+  - **Raw** - Original unformatted data
+  - **Hex** - Full hex dump with offset, bytes, and ASCII columns
+- **Copy Buttons** - One-click copy for metadata or payload
+
+**Special Features:**
+- **Zombie detection** - Flags connections open but idle for 60+ seconds
+- **Direction indicators** - ↑ sent (yellow) / ↓ received (cyan)
+- **Size display** - Human-readable byte sizes (KB, MB)
 
 #### MQTT Monitor (bottom)
-If your Webex Connect asset uses MQTT as the transfer protocol, this panel decodes and displays:
-- **Connection state** - Connecting, Connected, or Disconnected
-- **Packet types** - CONNECT, CONNACK, PUBLISH, SUBSCRIBE, PINGREQ, etc.
-- **Topics** - MQTT topics being published/subscribed
-- **QoS levels** - Quality of Service for each message
-- **Payloads** - Message content (JSON auto-formatted)
+
+If your Webex Connect asset uses MQTT as the transfer protocol:
+
+**Quick Stats Row:**
+- Connection state indicator, connection count, pub/recv/sub counts
+
+**Toolbar:**
+- **Filter buttons** - All, PUB, SUB, CONN, PING
+- **Search** - Filter by topic, payload, or client ID
+- **Clear** - Reset the log
+
+**Expandable Log Entries:**
+Click any entry for comprehensive packet details:
+- **Packet Header** - Type, direction, WS ID, timestamp, length
+- **PUBLISH Flags** - DUP, QoS (color-coded 0/1/2), RETAIN
+- **Details** - Topic, Client ID, Protocol version, Keep Alive, Return Code
+- **Connect Flags** - Clean Session, Will Flag, Will Retain, Password, Username
+- **Payload** - Formatted JSON or raw with copy button
+- **Raw Hex** - Full packet hex dump
+
+**Decoded Packet Types:**
+- CONNECT, CONNACK, PUBLISH, SUBSCRIBE, SUBACK
+- UNSUBSCRIBE, UNSUBACK, PINGREQ, PINGRESP, DISCONNECT, AUTH
 
 ### Far Right
 The right 25% of the screen is reserved for the actual chat widget to appear.

@@ -106,6 +106,331 @@
             padding: 6px;
         }
 
+        /* Panel toolbar for filters */
+        .panel-toolbar {
+            display: flex;
+            gap: 4px;
+            padding: 6px 8px;
+            background: #1a1a1a;
+            border-bottom: 1px solid #252525;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .panel-toolbar .filter-btn {
+            padding: 2px 6px;
+            font-size: 0.55rem;
+            background: #252525;
+            border: 1px solid #333;
+            color: #888;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .panel-toolbar .filter-btn:hover {
+            background: #333;
+            color: #fff;
+        }
+
+        .panel-toolbar .filter-btn.active {
+            background: #0891b2;
+            border-color: #0891b2;
+            color: #fff;
+        }
+
+        .panel-toolbar .search-input {
+            flex: 1;
+            min-width: 80px;
+            padding: 3px 6px;
+            font-size: 0.55rem;
+            background: #0d0d0d;
+            border: 1px solid #333;
+            color: #fff;
+            border-radius: 3px;
+            outline: none;
+        }
+
+        .panel-toolbar .search-input:focus {
+            border-color: #0891b2;
+        }
+
+        .panel-toolbar .clear-btn {
+            padding: 2px 6px;
+            font-size: 0.55rem;
+            background: #dc2626;
+            border: none;
+            color: #fff;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        /* Expandable log entries */
+        .log-entry {
+            border: 1px solid #1f1f1f;
+            border-radius: 4px;
+            margin-bottom: 4px;
+            overflow: hidden;
+            transition: all 0.15s;
+        }
+
+        .log-entry:hover {
+            border-color: #333;
+        }
+
+        .log-entry.expanded {
+            border-color: #0891b2;
+        }
+
+        .log-entry-header {
+            display: flex;
+            align-items: center;
+            padding: 4px 6px;
+            cursor: pointer;
+            background: #141414;
+            gap: 6px;
+        }
+
+        .log-entry-header:hover {
+            background: #1a1a1a;
+        }
+
+        .log-entry .expand-icon {
+            color: #666;
+            font-size: 0.5rem;
+            transition: transform 0.15s;
+            width: 10px;
+        }
+
+        .log-entry.expanded .expand-icon {
+            transform: rotate(90deg);
+        }
+
+        .log-entry .entry-time {
+            color: #666;
+            font-size: 0.5rem;
+            min-width: 55px;
+        }
+
+        .log-entry .entry-direction {
+            width: 14px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .log-entry .entry-direction.sent { color: #f59e0b; }
+        .log-entry .entry-direction.received { color: #06b6d4; }
+
+        .log-entry .entry-type {
+            padding: 1px 4px;
+            border-radius: 2px;
+            font-size: 0.5rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .log-entry .entry-preview {
+            flex: 1;
+            color: #aaa;
+            font-size: 0.55rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .log-entry .entry-size {
+            color: #666;
+            font-size: 0.5rem;
+        }
+
+        /* Expanded content area */
+        .log-entry-details {
+            display: none;
+            background: #0a0a0a;
+            border-top: 1px solid #1f1f1f;
+            padding: 8px;
+            font-size: 0.6rem;
+        }
+
+        .log-entry.expanded .log-entry-details {
+            display: block;
+        }
+
+        .detail-section {
+            margin-bottom: 8px;
+        }
+
+        .detail-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .detail-section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+
+        .detail-section-title {
+            color: #888;
+            font-size: 0.55rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .detail-copy-btn {
+            padding: 2px 6px;
+            font-size: 0.5rem;
+            background: #252525;
+            border: 1px solid #333;
+            color: #888;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+
+        .detail-copy-btn:hover {
+            background: #333;
+            color: #fff;
+        }
+
+        /* Metadata grid */
+        .detail-meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 4px;
+            margin-bottom: 8px;
+        }
+
+        .meta-item {
+            background: #141414;
+            padding: 4px 6px;
+            border-radius: 3px;
+        }
+
+        .meta-label {
+            color: #666;
+            font-size: 0.5rem;
+            display: block;
+        }
+
+        .meta-value {
+            color: #fff;
+            font-size: 0.6rem;
+            word-break: break-all;
+        }
+
+        .meta-value.success { color: #28a745; }
+        .meta-value.warning { color: #f59e0b; }
+        .meta-value.error { color: #ef4444; }
+
+        /* Payload display */
+        .payload-display {
+            background: #0d0d0d;
+            border: 1px solid #1f1f1f;
+            border-radius: 4px;
+            padding: 8px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.55rem;
+            line-height: 1.4;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        /* JSON syntax highlighting */
+        .json-key { color: #7dd3fc; }
+        .json-string { color: #86efac; }
+        .json-number { color: #fcd34d; }
+        .json-boolean { color: #c4b5fd; }
+        .json-null { color: #f87171; }
+
+        /* Hex dump display */
+        .hex-dump {
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.5rem;
+            line-height: 1.5;
+            background: #0d0d0d;
+            border: 1px solid #1f1f1f;
+            border-radius: 4px;
+            padding: 8px;
+            max-height: 150px;
+            overflow: auto;
+        }
+
+        .hex-line {
+            display: flex;
+            gap: 12px;
+        }
+
+        .hex-offset {
+            color: #666;
+            min-width: 50px;
+        }
+
+        .hex-bytes {
+            color: #7dd3fc;
+            min-width: 200px;
+        }
+
+        .hex-ascii {
+            color: #86efac;
+        }
+
+        /* Tab switcher for payload views */
+        .payload-tabs {
+            display: flex;
+            gap: 2px;
+            margin-bottom: 6px;
+        }
+
+        .payload-tab {
+            padding: 3px 8px;
+            font-size: 0.5rem;
+            background: #1a1a1a;
+            border: 1px solid #252525;
+            color: #888;
+            border-radius: 3px 3px 0 0;
+            cursor: pointer;
+            border-bottom: none;
+        }
+
+        .payload-tab:hover {
+            background: #252525;
+            color: #fff;
+        }
+
+        .payload-tab.active {
+            background: #0d0d0d;
+            color: #fff;
+            border-color: #1f1f1f;
+        }
+
+        /* MQTT-specific styles */
+        .mqtt-flags {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .mqtt-flag {
+            padding: 2px 6px;
+            font-size: 0.5rem;
+            border-radius: 3px;
+            background: #252525;
+            color: #888;
+        }
+
+        .mqtt-flag.active {
+            background: #0891b2;
+            color: #fff;
+        }
+
+        .mqtt-flag.qos-0 { background: #065f46; color: #6ee7b7; }
+        .mqtt-flag.qos-1 { background: #854d0e; color: #fcd34d; }
+        .mqtt-flag.qos-2 { background: #7c2d12; color: #fca5a5; }
+
         /* Boolean value highlighting */
         .bool-true {
             color: #28a745;
@@ -114,6 +439,56 @@
         .bool-false {
             color: #dc3545;
             font-weight: 600;
+        }
+
+        /* Stats row for WS/MQTT panels */
+        .ws-stats-row, .mqtt-stats-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 6px 0;
+            border-bottom: 1px solid #1f1f1f;
+            margin-bottom: 8px;
+            font-size: 0.6rem;
+            color: #888;
+            align-items: center;
+        }
+        .stat-item strong {
+            color: #fff;
+            margin-left: 2px;
+        }
+        .zombie-stat strong {
+            color: #f59e0b;
+        }
+
+        /* Expandable log container */
+        .expandable-log {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        /* WS/MQTT entry type badges */
+        .entry-type.ws-open { background: #065f46; color: #6ee7b7; }
+        .entry-type.ws-close { background: #7c2d12; color: #fca5a5; }
+        .entry-type.ws-sent { background: #854d0e; color: #fcd34d; }
+        .entry-type.ws-recv { background: #164e63; color: #67e8f9; }
+        .entry-type.ws-error { background: #7c2d12; color: #fca5a5; }
+        .entry-type.ws-zombie { background: #78350f; color: #fde047; }
+        .entry-type.mqtt-connect { background: #065f46; color: #6ee7b7; }
+        .entry-type.mqtt-connack { background: #065f46; color: #6ee7b7; }
+        .entry-type.mqtt-publish { background: #164e63; color: #67e8f9; }
+        .entry-type.mqtt-subscribe { background: #4c1d95; color: #c4b5fd; }
+        .entry-type.mqtt-suback { background: #4c1d95; color: #c4b5fd; }
+        .entry-type.mqtt-pingreq { background: #374151; color: #9ca3af; }
+        .entry-type.mqtt-pingresp { background: #374151; color: #9ca3af; }
+        .entry-type.mqtt-disconnect { background: #7c2d12; color: #fca5a5; }
+
+        /* Hidden entries for filtering */
+        .log-entry.filtered-out {
+            display: none !important;
         }
 
         /* Help Button - In Nav */
@@ -2359,28 +2734,23 @@ document.getElementById('openChat').onclick = function() {
                         <span class="panel-count" id="wsConnBadge">0</span>
                     </div>
                 </div>
+                <div class="panel-toolbar" id="wsToolbar">
+                    <button class="filter-btn active" data-filter="all" onclick="safariDebug.filterWsLogs('all')">All</button>
+                    <button class="filter-btn" data-filter="sent" onclick="safariDebug.filterWsLogs('sent')">&#8593; Sent</button>
+                    <button class="filter-btn" data-filter="recv" onclick="safariDebug.filterWsLogs('recv')">&#8595; Recv</button>
+                    <button class="filter-btn" data-filter="conn" onclick="safariDebug.filterWsLogs('conn')">Open/Close</button>
+                    <input type="text" class="search-input" placeholder="Search..." id="wsSearchInput" oninput="safariDebug.searchWsLogs(this.value)">
+                    <button class="clear-btn" onclick="safariDebug.clearWsLogs()">Clear</button>
+                </div>
                 <div class="panel-content">
-                    <div class="metric-row">
-                        <span class="metric-label">Active</span>
-                        <span class="metric-value" id="wsActiveCount">0</span>
+                    <div class="ws-stats-row">
+                        <span class="stat-item">Active: <strong id="wsActiveCount">0</strong></span>
+                        <span class="stat-item">Total: <strong id="wsTotalOpened">0</strong></span>
+                        <span class="stat-item">&#8593;<strong id="wsMsgsSent">0</strong></span>
+                        <span class="stat-item">&#8595;<strong id="wsMsgsReceived">0</strong></span>
+                        <span class="stat-item zombie-stat">&#9760;<strong id="wsZombieCount">0</strong></span>
                     </div>
-                    <div class="metric-row">
-                        <span class="metric-label">Total</span>
-                        <span class="metric-value" id="wsTotalOpened">0</span>
-                    </div>
-                    <div class="metric-row">
-                        <span class="metric-label">Sent</span>
-                        <span class="metric-value" id="wsMsgsSent">0</span>
-                    </div>
-                    <div class="metric-row">
-                        <span class="metric-label">Received</span>
-                        <span class="metric-value" id="wsMsgsReceived">0</span>
-                    </div>
-                    <div class="metric-row">
-                        <span class="metric-label">Zombies</span>
-                        <span class="metric-value warning" id="wsZombieCount">0</span>
-                    </div>
-                    <div class="mini-log" id="wsLogContainer"></div>
+                    <div class="expandable-log" id="wsLogContainer"></div>
                 </div>
             </div>
 
@@ -2395,35 +2765,26 @@ document.getElementById('openChat').onclick = function() {
                         <span class="panel-count" id="mqttConnBadge">-</span>
                     </div>
                 </div>
+                <div class="panel-toolbar" id="mqttToolbar">
+                    <button class="filter-btn active" data-filter="all" onclick="safariDebug.filterMqttLogs('all')">All</button>
+                    <button class="filter-btn" data-filter="publish" onclick="safariDebug.filterMqttLogs('publish')">PUB</button>
+                    <button class="filter-btn" data-filter="subscribe" onclick="safariDebug.filterMqttLogs('subscribe')">SUB</button>
+                    <button class="filter-btn" data-filter="conn" onclick="safariDebug.filterMqttLogs('conn')">CONN</button>
+                    <button class="filter-btn" data-filter="ping" onclick="safariDebug.filterMqttLogs('ping')">PING</button>
+                    <input type="text" class="search-input" placeholder="Search..." id="mqttSearchInput" oninput="safariDebug.searchMqttLogs(this.value)">
+                    <button class="clear-btn" onclick="safariDebug.clearMqttLogs()">Clear</button>
+                </div>
                 <div class="panel-content">
-                    <div class="mqtt-connection-indicator disconnected" id="mqttConnIndicator">
-                        <span>&#9679;</span> <span id="mqttConnState">Not detected</span>
+                    <div class="mqtt-stats-row">
+                        <div class="mqtt-connection-indicator disconnected" id="mqttConnIndicator">
+                            <span>&#9679;</span> <span id="mqttConnState">Not detected</span>
+                        </div>
+                        <span class="stat-item">Conn: <strong id="mqttConnCount">0</strong></span>
+                        <span class="stat-item">Pub: <strong id="mqttPubCount">0</strong></span>
+                        <span class="stat-item">Recv: <strong id="mqttRecvCount">0</strong></span>
+                        <span class="stat-item">Sub: <strong id="mqttSubCount">0</strong></span>
                     </div>
-                    <div class="metric-row">
-                        <span class="metric-label">Connections</span>
-                        <span class="metric-value" id="mqttConnCount">0</span>
-                    </div>
-                    <div class="metric-row">
-                        <span class="metric-label">Published</span>
-                        <span class="metric-value" id="mqttPubCount">0</span>
-                    </div>
-                    <div class="metric-row">
-                        <span class="metric-label">Received</span>
-                        <span class="metric-value" id="mqttRecvCount">0</span>
-                    </div>
-                    <div class="metric-row">
-                        <span class="metric-label">Subscribes</span>
-                        <span class="metric-value" id="mqttSubCount">0</span>
-                    </div>
-                    <div class="metric-row">
-                        <span class="metric-label">Pings</span>
-                        <span class="metric-value" id="mqttPingCount">0</span>
-                    </div>
-                    <div class="metric-row">
-                        <span class="metric-label">Broker</span>
-                        <span class="metric-value" id="mqttBrokerUrl" style="font-size: 0.55rem; word-break: break-all;">-</span>
-                    </div>
-                    <div class="mini-log" id="mqttLogContainer"></div>
+                    <div class="expandable-log" id="mqttLogContainer"></div>
                 </div>
             </div>
         </div>
@@ -3668,6 +4029,10 @@ document.getElementById('openChat').onclick = function() {
             wsTotalOpened: 0,
             wsTotalMessages: { sent: 0, received: 0 },
             zombieCheckInterval: null,
+            wsLogEntries: [], // Store full log entries for filtering
+            wsActiveFilter: 'all',
+            wsSearchQuery: '',
+            wsEntryIdCounter: 0,
 
             // MQTT tracking
             mqttConnections: new Map(),
@@ -3680,6 +4045,10 @@ document.getElementById('openChat').onclick = function() {
                 topics: new Set()
             },
             mqttState: 'disconnected', // disconnected, connecting, connected
+            mqttLogEntries: [], // Store full log entries for filtering
+            mqttActiveFilter: 'all',
+            mqttSearchQuery: '',
+            mqttEntryIdCounter: 0,
 
             // Visibility tracking
             visibilityState: document.visibilityState,
@@ -3874,21 +4243,44 @@ document.getElementById('openChat').onclick = function() {
                             }
                         }
 
+                        // Capture full payload data
+                        let fullPayload = null;
                         let msgPreview = '';
+                        let dataSize = 0;
+                        let dataType = 'unknown';
                         try {
                             if (typeof event.data === 'string') {
-                                msgPreview = event.data.substring(0, 150);
-                                if (event.data.length > 150) msgPreview += '...';
+                                fullPayload = event.data;
+                                dataType = 'string';
+                                dataSize = event.data.length;
+                                msgPreview = event.data.substring(0, 80);
+                                if (event.data.length > 80) msgPreview += '...';
                             } else if (event.data instanceof Blob) {
+                                dataType = 'blob';
+                                dataSize = event.data.size;
                                 msgPreview = '[Blob: ' + event.data.size + ' bytes]' + (isMqtt ? ' (MQTT)' : '');
+                                // Read blob for hex dump
+                                event.data.arrayBuffer().then(function(buffer) {
+                                    self.updateWsEntryPayload(wsId, 'recv', buffer);
+                                });
                             } else if (event.data instanceof ArrayBuffer) {
+                                fullPayload = event.data;
+                                dataType = 'arraybuffer';
+                                dataSize = event.data.byteLength;
                                 msgPreview = '[ArrayBuffer: ' + event.data.byteLength + ' bytes]' + (isMqtt ? ' (MQTT)' : '');
                             }
                         } catch (e) {
                             msgPreview = '[Unable to read]';
                         }
 
-                        self.logWsEvent(wsId, 'recv', { preview: msgPreview });
+                        self.logWsEvent(wsId, 'recv', {
+                            preview: msgPreview,
+                            fullPayload: fullPayload,
+                            dataType: dataType,
+                            dataSize: dataSize,
+                            url: url,
+                            isMqtt: isMqtt
+                        });
                         self.updateWsUI();
                     });
 
@@ -3917,21 +4309,43 @@ document.getElementById('openChat').onclick = function() {
                             }
                         }
 
+                        // Capture full payload data
+                        let fullPayload = null;
                         let msgPreview = '';
+                        let dataSize = 0;
+                        let dataType = 'unknown';
                         try {
                             if (typeof data === 'string') {
-                                msgPreview = data.substring(0, 150);
-                                if (data.length > 150) msgPreview += '...';
+                                fullPayload = data;
+                                dataType = 'string';
+                                dataSize = data.length;
+                                msgPreview = data.substring(0, 80);
+                                if (data.length > 80) msgPreview += '...';
                             } else if (data instanceof Blob) {
+                                dataType = 'blob';
+                                dataSize = data.size;
                                 msgPreview = '[Blob: ' + data.size + ' bytes]' + (isMqtt ? ' (MQTT)' : '');
+                                data.arrayBuffer().then(function(buffer) {
+                                    self.updateWsEntryPayload(wsId, 'sent', buffer);
+                                });
                             } else if (data instanceof ArrayBuffer) {
+                                fullPayload = data;
+                                dataType = 'arraybuffer';
+                                dataSize = data.byteLength;
                                 msgPreview = '[ArrayBuffer: ' + data.byteLength + ' bytes]' + (isMqtt ? ' (MQTT)' : '');
                             }
                         } catch (e) {
                             msgPreview = '[Unable to read]';
                         }
 
-                        self.logWsEvent(wsId, 'sent', { preview: msgPreview });
+                        self.logWsEvent(wsId, 'sent', {
+                            preview: msgPreview,
+                            fullPayload: fullPayload,
+                            dataType: dataType,
+                            dataSize: dataSize,
+                            url: url,
+                            isMqtt: isMqtt
+                        });
                         self.updateWsUI();
 
                         return originalSend(data);
@@ -3977,50 +4391,43 @@ document.getElementById('openChat').onclick = function() {
                 }, 10000);
             },
 
+            // ========================================
+            // WebSocket Deep Inspection Functions
+            // ========================================
+
             logWsEvent: function(wsId, type, data) {
                 const timestamp = new Date().toLocaleTimeString();
+                const fullTimestamp = new Date().toISOString();
                 const container = document.getElementById('wsLogContainer');
                 if (!container) return;
 
-                const entry = document.createElement('div');
-                let entryClass = 'mini-log-entry';
-                let direction = '';
+                const entryId = 'ws-entry-' + (++this.wsEntryIdCounter);
 
-                switch (type) {
-                    case 'open':
-                        entryClass += ' ws-open';
-                        break;
-                    case 'close':
-                        entryClass += ' ws-close';
-                        break;
-                    case 'sent':
-                        entryClass += ' ws-message';
-                        direction = '<span class="ws-direction sent">&#8593;</span>';
-                        break;
-                    case 'recv':
-                        entryClass += ' ws-message';
-                        direction = '<span class="ws-direction received">&#8595;</span>';
-                        break;
-                    case 'error':
-                        entryClass += ' ws-error';
-                        break;
-                    case 'zombie':
-                        entryClass += ' ws-zombie';
-                        break;
-                }
+                // Store entry data for filtering
+                const entryData = {
+                    id: entryId,
+                    wsId: wsId,
+                    type: type,
+                    timestamp: timestamp,
+                    fullTimestamp: fullTimestamp,
+                    data: data || {},
+                    category: this.getWsCategory(type)
+                };
+                this.wsLogEntries.push(entryData);
 
-                entry.className = entryClass;
-                entry.innerHTML =
-                    '<div class="mini-log-time">' + timestamp + ' [WS#' + wsId + ']</div>' +
-                    '<div class="mini-log-msg">' + direction + type + '</div>' +
-                    (data ? '<div class="mini-log-data">' + this.escapeHtml(JSON.stringify(data)) + '</div>' : '');
-
+                // Create the expandable entry element
+                const entry = this.createWsEntryElement(entryData);
                 container.appendChild(entry);
                 container.scrollTop = container.scrollHeight;
 
+                // Apply current filter
+                this.applyWsFilter(entry, entryData);
+
                 // Limit log entries
-                while (container.children.length > 100) {
-                    container.removeChild(container.firstChild);
+                while (this.wsLogEntries.length > 200) {
+                    const removed = this.wsLogEntries.shift();
+                    const oldEntry = document.getElementById(removed.id);
+                    if (oldEntry) oldEntry.remove();
                 }
 
                 // Also log important events to main panel
@@ -4029,6 +4436,338 @@ document.getElementById('openChat').onclick = function() {
                         type === 'error' || type === 'zombie' ? 'error' :
                         type === 'close' ? 'warn' : 'success');
                 }
+            },
+
+            getWsCategory: function(type) {
+                if (type === 'sent') return 'sent';
+                if (type === 'recv') return 'recv';
+                if (['open', 'close', 'connecting'].includes(type)) return 'conn';
+                return 'other';
+            },
+
+            createWsEntryElement: function(entryData) {
+                const self = this;
+                const entry = document.createElement('div');
+                entry.id = entryData.id;
+                entry.className = 'log-entry';
+                entry.dataset.type = entryData.type;
+                entry.dataset.category = entryData.category;
+
+                // Direction indicator
+                let dirIcon = '';
+                let dirClass = '';
+                if (entryData.type === 'sent') {
+                    dirIcon = '&#8593;';
+                    dirClass = 'sent';
+                } else if (entryData.type === 'recv') {
+                    dirIcon = '&#8595;';
+                    dirClass = 'received';
+                }
+
+                // Size display
+                const sizeDisplay = entryData.data.dataSize ?
+                    '<span class="entry-size">' + this.formatBytes(entryData.data.dataSize) + '</span>' : '';
+
+                // Preview text
+                const previewText = entryData.data.preview || entryData.type;
+
+                entry.innerHTML = `
+                    <div class="log-entry-header" onclick="safariDebug.toggleWsEntry('${entryData.id}')">
+                        <span class="expand-icon">&#9654;</span>
+                        <span class="entry-time">${entryData.timestamp}</span>
+                        <span class="entry-direction ${dirClass}">${dirIcon}</span>
+                        <span class="entry-type ws-${entryData.type}">${entryData.type.toUpperCase()}</span>
+                        <span class="entry-preview">${this.escapeHtml(previewText)}</span>
+                        ${sizeDisplay}
+                    </div>
+                    <div class="log-entry-details">
+                        ${this.createWsEntryDetails(entryData)}
+                    </div>
+                `;
+
+                return entry;
+            },
+
+            createWsEntryDetails: function(entryData) {
+                const data = entryData.data;
+                let html = '';
+
+                // Metadata section
+                html += `<div class="detail-section">
+                    <div class="detail-section-header">
+                        <span class="detail-section-title">Metadata</span>
+                        <button class="detail-copy-btn" onclick="safariDebug.copyWsMetadata('${entryData.id}');event.stopPropagation();">Copy</button>
+                    </div>
+                    <div class="detail-meta">
+                        <div class="meta-item"><span class="meta-label">WS ID</span><span class="meta-value">#${entryData.wsId}</span></div>
+                        <div class="meta-item"><span class="meta-label">Time</span><span class="meta-value">${entryData.fullTimestamp}</span></div>
+                        <div class="meta-item"><span class="meta-label">Type</span><span class="meta-value">${entryData.type}</span></div>
+                        ${data.dataType ? `<div class="meta-item"><span class="meta-label">Data Type</span><span class="meta-value">${data.dataType}</span></div>` : ''}
+                        ${data.dataSize ? `<div class="meta-item"><span class="meta-label">Size</span><span class="meta-value">${this.formatBytes(data.dataSize)}</span></div>` : ''}
+                        ${data.url ? `<div class="meta-item"><span class="meta-label">URL</span><span class="meta-value" style="font-size:0.5rem">${this.escapeHtml(data.url)}</span></div>` : ''}
+                        ${data.isMqtt ? `<div class="meta-item"><span class="meta-label">Protocol</span><span class="meta-value success">MQTT</span></div>` : ''}
+                    </div>
+                </div>`;
+
+                // Payload section if we have data
+                if (data.fullPayload !== null && data.fullPayload !== undefined) {
+                    html += `<div class="detail-section">
+                        <div class="detail-section-header">
+                            <span class="detail-section-title">Payload</span>
+                            <button class="detail-copy-btn" onclick="safariDebug.copyWsPayload('${entryData.id}');event.stopPropagation();">Copy</button>
+                        </div>
+                        <div class="payload-tabs">
+                            <button class="payload-tab active" onclick="safariDebug.showWsPayloadTab('${entryData.id}','formatted');event.stopPropagation();">Formatted</button>
+                            <button class="payload-tab" onclick="safariDebug.showWsPayloadTab('${entryData.id}','raw');event.stopPropagation();">Raw</button>
+                            ${data.dataType !== 'string' ? `<button class="payload-tab" onclick="safariDebug.showWsPayloadTab('${entryData.id}','hex');event.stopPropagation();">Hex</button>` : ''}
+                        </div>
+                        <div class="payload-display" id="${entryData.id}-payload-formatted">${this.formatPayload(data.fullPayload, 'formatted')}</div>
+                        <div class="payload-display" id="${entryData.id}-payload-raw" style="display:none">${this.formatPayload(data.fullPayload, 'raw')}</div>
+                        ${data.dataType !== 'string' ? `<div class="hex-dump" id="${entryData.id}-payload-hex" style="display:none">${this.formatHexDump(data.fullPayload)}</div>` : ''}
+                    </div>`;
+                }
+
+                // Connection-specific details
+                if (entryData.type === 'close' && data.code !== undefined) {
+                    html += `<div class="detail-section">
+                        <div class="detail-section-header">
+                            <span class="detail-section-title">Close Details</span>
+                        </div>
+                        <div class="detail-meta">
+                            <div class="meta-item"><span class="meta-label">Code</span><span class="meta-value ${data.code === 1000 ? 'success' : 'error'}">${data.code}</span></div>
+                            ${data.reason ? `<div class="meta-item"><span class="meta-label">Reason</span><span class="meta-value">${this.escapeHtml(data.reason)}</span></div>` : ''}
+                            ${data.wasClean !== undefined ? `<div class="meta-item"><span class="meta-label">Clean</span><span class="meta-value ${data.wasClean ? 'success' : 'error'}">${data.wasClean}</span></div>` : ''}
+                        </div>
+                    </div>`;
+                }
+
+                return html;
+            },
+
+            toggleWsEntry: function(entryId) {
+                const entry = document.getElementById(entryId);
+                if (entry) {
+                    entry.classList.toggle('expanded');
+                }
+            },
+
+            showWsPayloadTab: function(entryId, tab) {
+                const tabs = ['formatted', 'raw', 'hex'];
+                tabs.forEach(t => {
+                    const el = document.getElementById(entryId + '-payload-' + t);
+                    if (el) el.style.display = (t === tab) ? 'block' : 'none';
+                });
+                // Update tab buttons
+                const parent = document.getElementById(entryId);
+                if (parent) {
+                    parent.querySelectorAll('.payload-tab').forEach(btn => {
+                        btn.classList.toggle('active', btn.textContent.toLowerCase() === tab);
+                    });
+                }
+            },
+
+            formatPayload: function(payload, format) {
+                if (payload === null || payload === undefined) return '';
+
+                if (typeof payload === 'string') {
+                    // Try to parse as JSON
+                    try {
+                        const parsed = JSON.parse(payload);
+                        if (format === 'formatted') {
+                            return this.syntaxHighlightJson(JSON.stringify(parsed, null, 2));
+                        }
+                        return this.escapeHtml(payload);
+                    } catch (e) {
+                        return this.escapeHtml(payload);
+                    }
+                } else if (payload instanceof ArrayBuffer) {
+                    const bytes = new Uint8Array(payload);
+                    // Try to decode as UTF-8
+                    try {
+                        const decoder = new TextDecoder('utf-8');
+                        const str = decoder.decode(bytes);
+                        if (format === 'formatted') {
+                            try {
+                                const parsed = JSON.parse(str);
+                                return this.syntaxHighlightJson(JSON.stringify(parsed, null, 2));
+                            } catch (e) {
+                                return this.escapeHtml(str);
+                            }
+                        }
+                        return this.escapeHtml(str);
+                    } catch (e) {
+                        return '[Binary data - ' + bytes.length + ' bytes]';
+                    }
+                }
+                return this.escapeHtml(String(payload));
+            },
+
+            syntaxHighlightJson: function(json) {
+                if (!json) return '';
+                json = this.escapeHtml(json);
+                return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function(match) {
+                    let cls = 'json-number';
+                    if (/^"/.test(match)) {
+                        if (/:$/.test(match)) {
+                            cls = 'json-key';
+                        } else {
+                            cls = 'json-string';
+                        }
+                    } else if (/true|false/.test(match)) {
+                        cls = 'json-boolean';
+                    } else if (/null/.test(match)) {
+                        cls = 'json-null';
+                    }
+                    return '<span class="' + cls + '">' + match + '</span>';
+                });
+            },
+
+            formatHexDump: function(data) {
+                if (!data) return '';
+                let bytes;
+                if (data instanceof ArrayBuffer) {
+                    bytes = new Uint8Array(data);
+                } else if (typeof data === 'string') {
+                    bytes = new TextEncoder().encode(data);
+                } else {
+                    return '';
+                }
+
+                let html = '';
+                const bytesPerLine = 16;
+                for (let i = 0; i < bytes.length; i += bytesPerLine) {
+                    const slice = bytes.slice(i, i + bytesPerLine);
+                    const offset = i.toString(16).padStart(6, '0');
+                    const hexBytes = Array.from(slice).map(b => b.toString(16).padStart(2, '0')).join(' ');
+                    const ascii = Array.from(slice).map(b => (b >= 32 && b <= 126) ? String.fromCharCode(b) : '.').join('');
+
+                    html += `<div class="hex-line">
+                        <span class="hex-offset">${offset}</span>
+                        <span class="hex-bytes">${hexBytes.padEnd(48, ' ')}</span>
+                        <span class="hex-ascii">${this.escapeHtml(ascii)}</span>
+                    </div>`;
+                }
+                return html;
+            },
+
+            formatBytes: function(bytes) {
+                if (bytes < 1024) return bytes + ' B';
+                if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+                return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+            },
+
+            copyWsMetadata: function(entryId) {
+                const entry = this.wsLogEntries.find(e => e.id === entryId);
+                if (entry) {
+                    const meta = {
+                        wsId: entry.wsId,
+                        type: entry.type,
+                        timestamp: entry.fullTimestamp,
+                        ...entry.data
+                    };
+                    delete meta.fullPayload;
+                    navigator.clipboard.writeText(JSON.stringify(meta, null, 2));
+                    this.showToast('Metadata copied!');
+                }
+            },
+
+            copyWsPayload: function(entryId) {
+                const entry = this.wsLogEntries.find(e => e.id === entryId);
+                if (entry && entry.data.fullPayload) {
+                    let text = '';
+                    if (typeof entry.data.fullPayload === 'string') {
+                        text = entry.data.fullPayload;
+                    } else if (entry.data.fullPayload instanceof ArrayBuffer) {
+                        const decoder = new TextDecoder('utf-8');
+                        text = decoder.decode(entry.data.fullPayload);
+                    }
+                    navigator.clipboard.writeText(text);
+                    this.showToast('Payload copied!');
+                }
+            },
+
+            showToast: function(msg) {
+                const toast = document.getElementById('toast');
+                if (toast) {
+                    toast.textContent = msg;
+                    toast.classList.add('show');
+                    setTimeout(() => toast.classList.remove('show'), 2000);
+                }
+            },
+
+            updateWsEntryPayload: function(wsId, type, buffer) {
+                // Find the most recent entry for this wsId and type that doesn't have payload
+                for (let i = this.wsLogEntries.length - 1; i >= 0; i--) {
+                    const entry = this.wsLogEntries[i];
+                    if (entry.wsId === wsId && entry.type === type && !entry.data.fullPayload) {
+                        entry.data.fullPayload = buffer;
+                        // Re-render the entry details
+                        const el = document.getElementById(entry.id);
+                        if (el) {
+                            const details = el.querySelector('.log-entry-details');
+                            if (details) {
+                                details.innerHTML = this.createWsEntryDetails(entry);
+                            }
+                        }
+                        break;
+                    }
+                }
+            },
+
+            // ========================================
+            // WebSocket Filtering Functions
+            // ========================================
+
+            filterWsLogs: function(filter) {
+                this.wsActiveFilter = filter;
+
+                // Update button states
+                document.querySelectorAll('#wsToolbar .filter-btn').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.filter === filter);
+                });
+
+                // Apply filter to all entries
+                this.wsLogEntries.forEach(entry => {
+                    const el = document.getElementById(entry.id);
+                    if (el) this.applyWsFilter(el, entry);
+                });
+            },
+
+            applyWsFilter: function(element, entryData) {
+                let visible = true;
+
+                // Category filter
+                if (this.wsActiveFilter !== 'all') {
+                    visible = entryData.category === this.wsActiveFilter;
+                }
+
+                // Search filter
+                if (visible && this.wsSearchQuery) {
+                    const searchLower = this.wsSearchQuery.toLowerCase();
+                    const searchableText = (
+                        entryData.type +
+                        (entryData.data.preview || '') +
+                        (entryData.data.url || '') +
+                        JSON.stringify(entryData.data)
+                    ).toLowerCase();
+                    visible = searchableText.includes(searchLower);
+                }
+
+                element.classList.toggle('filtered-out', !visible);
+            },
+
+            searchWsLogs: function(query) {
+                this.wsSearchQuery = query;
+                this.wsLogEntries.forEach(entry => {
+                    const el = document.getElementById(entry.id);
+                    if (el) this.applyWsFilter(el, entry);
+                });
+            },
+
+            clearWsLogs: function() {
+                this.wsLogEntries = [];
+                const container = document.getElementById('wsLogContainer');
+                if (container) container.innerHTML = '';
             },
 
             updateWsUI: function() {
@@ -4042,9 +4781,8 @@ document.getElementById('openChat').onclick = function() {
                 document.getElementById('wsMsgsReceived').textContent = this.wsTotalMessages.received;
                 document.getElementById('wsZombieCount').textContent = zombieCount;
 
-                // Update summary badges
+                // Update summary badge
                 document.getElementById('wsConnBadge').textContent = activeCount + ' active';
-                document.getElementById('wsMsgBadge').textContent = totalMsgs + ' msgs';
 
                 // Update status dot
                 const statusDot = document.getElementById('wsStatusDot');
@@ -4834,48 +5572,320 @@ document.getElementById('openChat').onclick = function() {
                 return true;
             },
 
+            // ========================================
+            // MQTT Deep Inspection Functions
+            // ========================================
+
             logMqttEvent: function(wsId, packet, direction) {
                 const timestamp = new Date().toLocaleTimeString();
+                const fullTimestamp = new Date().toISOString();
                 const container = document.getElementById('mqttLogContainer');
                 if (!container) return;
 
+                const entryId = 'mqtt-entry-' + (++this.mqttEntryIdCounter);
+
+                // Determine category for filtering
+                const category = this.getMqttCategory(packet.typeName);
+
+                // Store entry data for filtering
+                const entryData = {
+                    id: entryId,
+                    wsId: wsId,
+                    packet: packet,
+                    direction: direction,
+                    timestamp: timestamp,
+                    fullTimestamp: fullTimestamp,
+                    category: category
+                };
+                this.mqttLogEntries.push(entryData);
+
+                // Create the expandable entry element
+                const entry = this.createMqttEntryElement(entryData);
+                container.appendChild(entry);
+                container.scrollTop = container.scrollHeight;
+
+                // Apply current filter
+                this.applyMqttFilter(entry, entryData);
+
+                // Limit log entries
+                while (this.mqttLogEntries.length > 200) {
+                    const removed = this.mqttLogEntries.shift();
+                    const oldEntry = document.getElementById(removed.id);
+                    if (oldEntry) oldEntry.remove();
+                }
+            },
+
+            getMqttCategory: function(typeName) {
+                switch (typeName) {
+                    case 'PUBLISH': return 'publish';
+                    case 'SUBSCRIBE':
+                    case 'SUBACK':
+                    case 'UNSUBSCRIBE':
+                    case 'UNSUBACK': return 'subscribe';
+                    case 'CONNECT':
+                    case 'CONNACK':
+                    case 'DISCONNECT':
+                    case 'AUTH': return 'conn';
+                    case 'PINGREQ':
+                    case 'PINGRESP': return 'ping';
+                    default: return 'other';
+                }
+            },
+
+            createMqttEntryElement: function(entryData) {
                 const entry = document.createElement('div');
-                let entryClass = 'mini-log-entry mqtt-' + packet.typeName.toLowerCase();
+                entry.id = entryData.id;
+                entry.className = 'log-entry';
+                entry.dataset.type = entryData.packet.typeName.toLowerCase();
+                entry.dataset.category = entryData.category;
 
-                const dirIcon = direction === 'sent' ? '↑' : '↓';
-                const dirClass = direction === 'sent' ? 'sent' : 'received';
+                const dirIcon = entryData.direction === 'sent' ? '&#8593;' : '&#8595;';
+                const dirClass = entryData.direction === 'sent' ? 'sent' : 'received';
 
-                let detailsHtml = '';
-                if (packet.details) {
-                    if (packet.details.topic) {
-                        detailsHtml += '<div class="mqtt-topic">' + this.escapeHtml(packet.details.topic) + '</div>';
-                    }
-                    if (packet.details.payload) {
-                        detailsHtml += '<div class="mqtt-payload-preview">' + this.escapeHtml(packet.details.payload) + '</div>';
-                    }
-                    if (packet.details.clientId) {
-                        detailsHtml += '<div class="mini-log-data">Client: ' + this.escapeHtml(packet.details.clientId) + '</div>';
-                    }
-                    if (packet.details.status) {
-                        detailsHtml += '<div class="mini-log-data">' + this.escapeHtml(packet.details.status) + '</div>';
-                    }
-                    if (packet.details.topics) {
-                        detailsHtml += '<div class="mini-log-data">Topics: ' + this.escapeHtml(packet.details.topics) + '</div>';
+                // Preview text based on packet type
+                let previewText = '';
+                if (entryData.packet.details) {
+                    if (entryData.packet.details.topic) {
+                        previewText = entryData.packet.details.topic;
+                    } else if (entryData.packet.details.clientId) {
+                        previewText = 'Client: ' + entryData.packet.details.clientId;
+                    } else if (entryData.packet.details.status) {
+                        previewText = entryData.packet.details.status;
                     }
                 }
 
-                entry.className = entryClass;
-                entry.innerHTML =
-                    '<div class="mini-log-time">' + timestamp + '</div>' +
-                    '<div class="mini-log-msg">' +
-                    '<span class="ws-direction ' + dirClass + '">' + dirIcon + '</span>' +
-                    '<span class="mqtt-packet-type ' + packet.typeName.toLowerCase() + '">' + packet.typeName + '</span>' +
-                    (packet.details && packet.details.qos !== undefined ? '<span class="mqtt-qos">QoS ' + packet.details.qos + '</span>' : '') +
-                    '</div>' +
-                    detailsHtml;
+                // QoS badge if available
+                const qosBadge = (entryData.packet.details && entryData.packet.details.qos !== undefined) ?
+                    `<span class="mqtt-flag qos-${entryData.packet.details.qos}">QoS ${entryData.packet.details.qos}</span>` : '';
 
-                container.appendChild(entry);
-                container.scrollTop = container.scrollHeight;
+                entry.innerHTML = `
+                    <div class="log-entry-header" onclick="safariDebug.toggleMqttEntry('${entryData.id}')">
+                        <span class="expand-icon">&#9654;</span>
+                        <span class="entry-time">${entryData.timestamp}</span>
+                        <span class="entry-direction ${dirClass}">${dirIcon}</span>
+                        <span class="entry-type mqtt-${entryData.packet.typeName.toLowerCase()}">${entryData.packet.typeName}</span>
+                        ${qosBadge}
+                        <span class="entry-preview">${this.escapeHtml(previewText)}</span>
+                    </div>
+                    <div class="log-entry-details">
+                        ${this.createMqttEntryDetails(entryData)}
+                    </div>
+                `;
+
+                return entry;
+            },
+
+            createMqttEntryDetails: function(entryData) {
+                const packet = entryData.packet;
+                const details = packet.details || {};
+                let html = '';
+
+                // Header Info section
+                html += `<div class="detail-section">
+                    <div class="detail-section-header">
+                        <span class="detail-section-title">Packet Header</span>
+                        <button class="detail-copy-btn" onclick="safariDebug.copyMqttPacket('${entryData.id}');event.stopPropagation();">Copy</button>
+                    </div>
+                    <div class="detail-meta">
+                        <div class="meta-item"><span class="meta-label">Type</span><span class="meta-value">${packet.typeName} (${packet.type})</span></div>
+                        <div class="meta-item"><span class="meta-label">Direction</span><span class="meta-value ${entryData.direction}">${entryData.direction === 'sent' ? '&#8593; Sent' : '&#8595; Received'}</span></div>
+                        <div class="meta-item"><span class="meta-label">WS ID</span><span class="meta-value">#${entryData.wsId}</span></div>
+                        <div class="meta-item"><span class="meta-label">Time</span><span class="meta-value">${entryData.fullTimestamp}</span></div>
+                        <div class="meta-item"><span class="meta-label">Length</span><span class="meta-value">${packet.length} bytes</span></div>
+                    </div>
+                </div>`;
+
+                // Flags section for PUBLISH packets
+                if (packet.typeName === 'PUBLISH') {
+                    html += `<div class="detail-section">
+                        <div class="detail-section-header">
+                            <span class="detail-section-title">PUBLISH Flags</span>
+                        </div>
+                        <div class="mqtt-flags">
+                            <span class="mqtt-flag ${details.dup ? 'active' : ''}">DUP: ${details.dup ? 'Yes' : 'No'}</span>
+                            <span class="mqtt-flag qos-${details.qos || 0}">QoS: ${details.qos || 0}</span>
+                            <span class="mqtt-flag ${details.retain ? 'active' : ''}">RETAIN: ${details.retain ? 'Yes' : 'No'}</span>
+                        </div>
+                    </div>`;
+                }
+
+                // Packet-specific details
+                if (details.topic || details.clientId || details.status || details.returnCode !== undefined) {
+                    html += `<div class="detail-section">
+                        <div class="detail-section-header">
+                            <span class="detail-section-title">Details</span>
+                        </div>
+                        <div class="detail-meta">
+                            ${details.topic ? `<div class="meta-item"><span class="meta-label">Topic</span><span class="meta-value">${this.escapeHtml(details.topic)}</span></div>` : ''}
+                            ${details.clientId ? `<div class="meta-item"><span class="meta-label">Client ID</span><span class="meta-value">${this.escapeHtml(details.clientId)}</span></div>` : ''}
+                            ${details.protocolName ? `<div class="meta-item"><span class="meta-label">Protocol</span><span class="meta-value">${this.escapeHtml(details.protocolName)} v${details.protocolLevel}</span></div>` : ''}
+                            ${details.keepAlive !== undefined ? `<div class="meta-item"><span class="meta-label">Keep Alive</span><span class="meta-value">${details.keepAlive}s</span></div>` : ''}
+                            ${details.returnCode !== undefined ? `<div class="meta-item"><span class="meta-label">Return Code</span><span class="meta-value ${details.returnCode === 0 ? 'success' : 'error'}">${details.returnCode} ${details.status || ''}</span></div>` : ''}
+                            ${details.topics ? `<div class="meta-item"><span class="meta-label">Topics</span><span class="meta-value">${this.escapeHtml(details.topics)}</span></div>` : ''}
+                            ${details.status && !details.returnCode ? `<div class="meta-item"><span class="meta-label">Status</span><span class="meta-value">${this.escapeHtml(details.status)}</span></div>` : ''}
+                        </div>
+                    </div>`;
+                }
+
+                // Connect flags for CONNECT packets
+                if (packet.typeName === 'CONNECT' && details.flags) {
+                    html += `<div class="detail-section">
+                        <div class="detail-section-header">
+                            <span class="detail-section-title">Connect Flags</span>
+                        </div>
+                        <div class="mqtt-flags">
+                            <span class="mqtt-flag ${details.flags.cleanSession ? 'active' : ''}">Clean Session</span>
+                            <span class="mqtt-flag ${details.flags.willFlag ? 'active' : ''}">Will Flag</span>
+                            <span class="mqtt-flag ${details.flags.willRetain ? 'active' : ''}">Will Retain</span>
+                            <span class="mqtt-flag ${details.flags.passwordFlag ? 'active' : ''}">Password</span>
+                            <span class="mqtt-flag ${details.flags.usernameFlag ? 'active' : ''}">Username</span>
+                        </div>
+                    </div>`;
+                }
+
+                // Payload section for PUBLISH
+                if (details.payload) {
+                    html += `<div class="detail-section">
+                        <div class="detail-section-header">
+                            <span class="detail-section-title">Payload</span>
+                            <button class="detail-copy-btn" onclick="safariDebug.copyMqttPayload('${entryData.id}');event.stopPropagation();">Copy</button>
+                        </div>
+                        <div class="payload-tabs">
+                            <button class="payload-tab active" onclick="safariDebug.showMqttPayloadTab('${entryData.id}','formatted');event.stopPropagation();">Formatted</button>
+                            <button class="payload-tab" onclick="safariDebug.showMqttPayloadTab('${entryData.id}','raw');event.stopPropagation();">Raw</button>
+                        </div>
+                        <div class="payload-display" id="${entryData.id}-payload-formatted">${this.formatMqttPayload(details.payload, 'formatted')}</div>
+                        <div class="payload-display" id="${entryData.id}-payload-raw" style="display:none">${this.formatMqttPayload(details.payload, 'raw')}</div>
+                    </div>`;
+                }
+
+                // Raw hex dump of packet
+                if (packet.rawData) {
+                    html += `<div class="detail-section">
+                        <div class="detail-section-header">
+                            <span class="detail-section-title">Raw Packet (Hex)</span>
+                        </div>
+                        <div class="hex-dump">${this.formatHexDump(packet.rawData)}</div>
+                    </div>`;
+                }
+
+                return html;
+            },
+
+            toggleMqttEntry: function(entryId) {
+                const entry = document.getElementById(entryId);
+                if (entry) {
+                    entry.classList.toggle('expanded');
+                }
+            },
+
+            showMqttPayloadTab: function(entryId, tab) {
+                const tabs = ['formatted', 'raw'];
+                tabs.forEach(t => {
+                    const el = document.getElementById(entryId + '-payload-' + t);
+                    if (el) el.style.display = (t === tab) ? 'block' : 'none';
+                });
+                const parent = document.getElementById(entryId);
+                if (parent) {
+                    parent.querySelectorAll('.payload-tab').forEach(btn => {
+                        btn.classList.toggle('active', btn.textContent.toLowerCase() === tab);
+                    });
+                }
+            },
+
+            formatMqttPayload: function(payload, format) {
+                if (!payload) return '';
+                // Try to parse as JSON
+                try {
+                    const parsed = JSON.parse(payload);
+                    if (format === 'formatted') {
+                        return this.syntaxHighlightJson(JSON.stringify(parsed, null, 2));
+                    }
+                    return this.escapeHtml(payload);
+                } catch (e) {
+                    return this.escapeHtml(payload);
+                }
+            },
+
+            copyMqttPacket: function(entryId) {
+                const entry = this.mqttLogEntries.find(e => e.id === entryId);
+                if (entry) {
+                    const data = {
+                        timestamp: entry.fullTimestamp,
+                        direction: entry.direction,
+                        wsId: entry.wsId,
+                        packet: {
+                            type: entry.packet.type,
+                            typeName: entry.packet.typeName,
+                            length: entry.packet.length,
+                            details: entry.packet.details
+                        }
+                    };
+                    navigator.clipboard.writeText(JSON.stringify(data, null, 2));
+                    this.showToast('Packet copied!');
+                }
+            },
+
+            copyMqttPayload: function(entryId) {
+                const entry = this.mqttLogEntries.find(e => e.id === entryId);
+                if (entry && entry.packet.details && entry.packet.details.payload) {
+                    navigator.clipboard.writeText(entry.packet.details.payload);
+                    this.showToast('Payload copied!');
+                }
+            },
+
+            // ========================================
+            // MQTT Filtering Functions
+            // ========================================
+
+            filterMqttLogs: function(filter) {
+                this.mqttActiveFilter = filter;
+
+                // Update button states
+                document.querySelectorAll('#mqttToolbar .filter-btn').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.filter === filter);
+                });
+
+                // Apply filter to all entries
+                this.mqttLogEntries.forEach(entry => {
+                    const el = document.getElementById(entry.id);
+                    if (el) this.applyMqttFilter(el, entry);
+                });
+            },
+
+            applyMqttFilter: function(element, entryData) {
+                let visible = true;
+
+                // Category filter
+                if (this.mqttActiveFilter !== 'all') {
+                    visible = entryData.category === this.mqttActiveFilter;
+                }
+
+                // Search filter
+                if (visible && this.mqttSearchQuery) {
+                    const searchLower = this.mqttSearchQuery.toLowerCase();
+                    const searchableText = (
+                        entryData.packet.typeName +
+                        (entryData.packet.details ? JSON.stringify(entryData.packet.details) : '')
+                    ).toLowerCase();
+                    visible = searchableText.includes(searchLower);
+                }
+
+                element.classList.toggle('filtered-out', !visible);
+            },
+
+            searchMqttLogs: function(query) {
+                this.mqttSearchQuery = query;
+                this.mqttLogEntries.forEach(entry => {
+                    const el = document.getElementById(entry.id);
+                    if (el) this.applyMqttFilter(el, entry);
+                });
+            },
+
+            clearMqttLogs: function() {
+                this.mqttLogEntries = [];
+                const container = document.getElementById('mqttLogContainer');
+                if (container) container.innerHTML = '';
             },
 
             updateMqttUI: function() {
@@ -4884,7 +5894,6 @@ document.getElementById('openChat').onclick = function() {
                 document.getElementById('mqttPubCount').textContent = this.mqttStats.published;
                 document.getElementById('mqttRecvCount').textContent = this.mqttStats.received;
                 document.getElementById('mqttSubCount').textContent = this.mqttStats.subscribes;
-                document.getElementById('mqttPingCount').textContent = this.mqttStats.pings;
 
                 // Connection state indicator
                 const indicator = document.getElementById('mqttConnIndicator');
@@ -4894,24 +5903,21 @@ document.getElementById('openChat').onclick = function() {
                 stateText.textContent = this.mqttState === 'connected' ? 'Connected' :
                                         this.mqttState === 'connecting' ? 'Connecting...' : 'Not detected';
 
-                // Summary badges
+                // Summary badge
                 const connBadge = document.getElementById('mqttConnBadge');
                 if (this.mqttState === 'connected') {
                     connBadge.textContent = 'Connected';
-                    connBadge.className = 'metric-badge online';
+                    connBadge.className = 'panel-count';
                 } else if (this.mqttState === 'connecting') {
                     connBadge.textContent = 'Connecting';
-                    connBadge.className = 'metric-badge warning';
+                    connBadge.className = 'panel-count';
                 } else if (this.mqttStats.connections > 0) {
                     connBadge.textContent = 'Disconnected';
-                    connBadge.className = 'metric-badge offline';
+                    connBadge.className = 'panel-count';
                 } else {
-                    connBadge.textContent = 'No MQTT';
-                    connBadge.className = 'metric-badge';
+                    connBadge.textContent = '-';
+                    connBadge.className = 'panel-count';
                 }
-
-                const msgTotal = this.mqttStats.published + this.mqttStats.received;
-                document.getElementById('mqttMsgBadge').textContent = msgTotal + ' msgs';
 
                 // Status dot
                 const statusDot = document.getElementById('mqttStatusDot');
@@ -4921,12 +5927,6 @@ document.getElementById('openChat').onclick = function() {
                     statusDot.className = 'section-status warning';
                 } else {
                     statusDot.className = 'section-status';
-                }
-
-                // Broker URL (from first active connection)
-                const activeConn = [...this.mqttConnections.values()].find(c => c.state === 'connected');
-                if (activeConn && activeConn.broker) {
-                    document.getElementById('mqttBrokerUrl').textContent = activeConn.broker;
                 }
             },
 
@@ -4958,7 +5958,16 @@ document.getElementById('openChat').onclick = function() {
                         totalOpened: this.wsTotalOpened,
                         activeCount: [...this.websockets.values()].filter(w => w.state === 'open').length,
                         messages: this.wsTotalMessages,
-                        zombiesDetected: [...this.websockets.values()].filter(w => w.markedZombie).length
+                        zombiesDetected: [...this.websockets.values()].filter(w => w.markedZombie).length,
+                        logEntries: this.wsLogEntries.map(e => ({
+                            id: e.id,
+                            wsId: e.wsId,
+                            type: e.type,
+                            timestamp: e.fullTimestamp,
+                            preview: e.data.preview,
+                            dataType: e.data.dataType,
+                            dataSize: e.data.dataSize
+                        }))
                     },
                     mqtt: {
                         state: this.mqttState,
@@ -4968,7 +5977,15 @@ document.getElementById('openChat').onclick = function() {
                         subscribes: this.mqttStats.subscribes,
                         pings: this.mqttStats.pings,
                         topics: [...this.mqttStats.topics],
-                        activeConnections: [...this.mqttConnections.values()].filter(c => c.state === 'connected').length
+                        activeConnections: [...this.mqttConnections.values()].filter(c => c.state === 'connected').length,
+                        logEntries: this.mqttLogEntries.map(e => ({
+                            id: e.id,
+                            wsId: e.wsId,
+                            direction: e.direction,
+                            timestamp: e.fullTimestamp,
+                            packetType: e.packet.typeName,
+                            details: e.packet.details
+                        }))
                     },
                     visibility: {
                         state: this.visibilityState,
@@ -4986,6 +6003,10 @@ document.getElementById('openChat').onclick = function() {
 
             // Clear mini-logs
             clearLogs: function() {
+                // Clear WS and MQTT log entries
+                this.wsLogEntries = [];
+                this.mqttLogEntries = [];
+                // Clear log containers
                 ['wsLogContainer', 'visLogContainer', 'netLogContainer', 'mqttLogContainer'].forEach(function(id) {
                     const el = document.getElementById(id);
                     if (el) el.innerHTML = '';
