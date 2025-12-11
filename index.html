@@ -3784,6 +3784,12 @@ document.getElementById('openChat').onclick = function() {
                 debugTools.addLog(type, message, null, logType);
                 // Also log to Browser Console panel
                 debugTools.addBrowserConsoleLog(message, logType);
+
+                // Detect WebSocket messages from widget iframe
+                // The widget logs messages like "WebSocket Connection status changed to :" and "Now Webcoscket is :"
+                if (typeof safariDebug !== 'undefined') {
+                    safariDebug.parseWidgetConsoleLog(message, args);
+                }
             } finally {
                 isLoggingToPanel = false;
             }
@@ -4081,6 +4087,137 @@ document.getElementById('openChat').onclick = function() {
                 this.loadSectionStates();
 
                 debugTools.addLog('events', 'Safari debug tools initialized', null, 'success');
+            },
+
+            // ========================================
+            // Widget Console Log Parsing
+            // ========================================
+            // Since the widget runs in a cross-origin iframe, we can't intercept its
+            // WebSocket directly. But the widget logs to the parent console, so we
+            // parse those logs to track WebSocket state.
+
+            widgetWsState: 'unknown',
+            widgetWsId: 0,
+
+            parseWidgetConsoleLog: function(message, args) {
+                // Detect WebSocket status messages from the widget
+                // Examples:
+                // "12/11/2025, 5:19:07 PM – "WebSocket Connection status changed to :" – 2"
+                // "12/11/2025, 5:19:07 PM – "First connected""
+                // "12/11/2025, 5:19:07 PM – "Now Webcoscket is :" – "Connected""
+
+                const lowerMsg = message.toLowerCase();
+
+                // WebSocket connection status
+                if (lowerMsg.includes('websocket connection status changed') ||
+                    lowerMsg.includes('webcoscket is') ||
+                    lowerMsg.includes('websocket is')) {
+
+                    // Extract status - look for "Connected", "Disconnected", or status codes
+                    let status = 'unknown';
+                    if (lowerMsg.includes('connected') && !lowerMsg.includes('disconnected')) {
+                        status = 'connected';
+                    } else if (lowerMsg.includes('disconnected')) {
+                        status = 'disconnected';
+                    } else if (lowerMsg.includes('connecting')) {
+                        status = 'connecting';
+                    }
+
+                    // Look for status code (0, 1, 2, 3)
+                    const codeMatch = message.match(/status.*?(\d)/i);
+                    if (codeMatch) {
+                        const code = parseInt(codeMatch[1]);
+                        // WebSocket readyState: 0=CONNECTING, 1=OPEN, 2=CLOSING, 3=CLOSED
+                        if (code === 0) status = 'connecting';
+                        else if (code === 1) status = 'connected';
+                        else if (code === 2) status = 'closing';
+                        else if (code === 3) status = 'closed';
+                    }
+
+                    if (status !== this.widgetWsState) {
+                        this.widgetWsState = status;
+                        this.logWidgetWsEvent('status', { state: status, raw: message });
+                    }
+                }
+
+                // First connected
+                if (lowerMsg.includes('first connected')) {
+                    if (this.widgetWsId === 0) {
+                        this.widgetWsId = 1;
+                        this.wsTotalOpened = 1;
+                    }
+                    this.widgetWsState = 'connected';
+                    this.logWidgetWsEvent('open', { note: 'First connection established' });
+                    this.updateWsUI();
+                }
+
+                // Connection closed/lost
+                if (lowerMsg.includes('connection closed') || lowerMsg.includes('connection lost') ||
+                    lowerMsg.includes('disconnected')) {
+                    this.widgetWsState = 'disconnected';
+                    this.logWidgetWsEvent('close', { note: 'Connection closed' });
+                    this.updateWsUI();
+                }
+
+                // Reconnecting
+                if (lowerMsg.includes('reconnect')) {
+                    this.logWidgetWsEvent('reconnect', { raw: message });
+                }
+
+                // Message sent/received (if widget logs these)
+                if (lowerMsg.includes('sending message') || lowerMsg.includes('send message')) {
+                    this.wsTotalMessages.sent++;
+                    this.logWidgetWsEvent('sent', { preview: message.substring(0, 80) });
+                    this.updateWsUI();
+                }
+
+                if (lowerMsg.includes('received message') || lowerMsg.includes('message received')) {
+                    this.wsTotalMessages.received++;
+                    this.logWidgetWsEvent('recv', { preview: message.substring(0, 80) });
+                    this.updateWsUI();
+                }
+            },
+
+            logWidgetWsEvent: function(type, data) {
+                // Create a synthetic WebSocket event for the widget's iframe connection
+                const wsId = this.widgetWsId || 1;
+                if (!this.websockets.has(wsId)) {
+                    this.websockets.set(wsId, {
+                        id: wsId,
+                        ws: null, // Can't access the actual WebSocket
+                        url: 'widget-iframe (cross-origin)',
+                        state: 'unknown',
+                        msgSent: 0,
+                        msgReceived: 0,
+                        lastActivity: Date.now(),
+                        markedZombie: false,
+                        isWidgetIframe: true
+                    });
+                }
+
+                const wsData = this.websockets.get(wsId);
+                wsData.lastActivity = Date.now();
+
+                if (type === 'open' || type === 'status') {
+                    wsData.state = data.state || 'open';
+                    if (type === 'open') {
+                        wsData.openTime = Date.now();
+                    }
+                } else if (type === 'close') {
+                    wsData.state = 'closed';
+                    wsData.closeTime = Date.now();
+                } else if (type === 'sent') {
+                    wsData.msgSent++;
+                } else if (type === 'recv') {
+                    wsData.msgReceived++;
+                }
+
+                // Log to the WS panel
+                this.logWsEvent(wsId, type, {
+                    ...data,
+                    source: 'widget-iframe',
+                    note: data.note || data.raw || ''
+                });
             },
 
             // Toggle section collapse
