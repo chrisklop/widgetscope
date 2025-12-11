@@ -4200,6 +4200,9 @@ document.getElementById('openChat').onclick = function() {
                 const data = parsedData || rawData;
                 if (!data) return;
 
+                // DEBUG: Log ALL postMessages from widget origins
+                console.log('[WidgetScope] PostMessage from widget:', origin, typeof data === 'object' ? JSON.stringify(data).substring(0, 200) : data);
+
                 // Convert to string for searching
                 const dataStr = typeof data === 'string' ? data : JSON.stringify(data);
                 const lowerStr = dataStr.toLowerCase();
