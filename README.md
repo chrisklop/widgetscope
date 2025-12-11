@@ -50,9 +50,11 @@ That's it! WidgetScope automatically extracts the GUID and Bind ID from your sni
 
 The widget should appear on the right side of the screen. Use the dashboard panels to:
 - Watch PostMessages for widget communication
-- Monitor network requests
-- Check console output
+- Monitor network requests and XHR/Fetch calls
+- Check console output for errors
 - View widget configuration
+- **Monitor WebSocket connections** in real-time
+- **Track MQTT protocol messages** (if your widget uses MQTT)
 
 ---
 
@@ -129,6 +131,11 @@ The **Status Orb** in the nav bar shows connection health:
 - **Session Info** - Session ID, start time, duration
 - **Filter Controls** - Hide noise from browser extensions or debug messages
 - **Widget Config** - Parsed configuration received from the widget (appears after widget loads)
+- **Safari Debug Tools** (collapsible sections):
+  - **Visibility** - Page visibility state tracking for background tab issues
+  - **Browser** - Safari version detection and WebKit bug warnings
+  - **Network** - Online/offline status monitoring
+  - **Storage** - localStorage, sessionStorage, cookies, IndexedDB diagnostics
 
 ### Center Panels
 
@@ -147,7 +154,25 @@ Tracks XHR and Fetch requests with timing and status codes.
 #### Widget Events
 Lifecycle events like script loading, DOM mutations, and state changes.
 
-### Right Side
+### Right Column - WebSocket & MQTT Monitors
+
+A dedicated split panel for real-time connection monitoring:
+
+#### WebSocket Monitor (top)
+- **Active connections** - Currently open WebSocket connections
+- **Message counts** - Sent/received message totals
+- **Zombie detection** - Flags connections that appear open but have no activity for 60+ seconds
+- **Event log** - Real-time log of open, close, error, and message events
+
+#### MQTT Monitor (bottom)
+If your Webex Connect asset uses MQTT as the transfer protocol, this panel decodes and displays:
+- **Connection state** - Connecting, Connected, or Disconnected
+- **Packet types** - CONNECT, CONNACK, PUBLISH, SUBSCRIBE, PINGREQ, etc.
+- **Topics** - MQTT topics being published/subscribed
+- **QoS levels** - Quality of Service for each message
+- **Payloads** - Message content (JSON auto-formatted)
+
+### Far Right
 The right 25% of the screen is reserved for the actual chat widget to appear.
 
 ---
@@ -175,6 +200,26 @@ The right 25% of the screen is reserved for the actual chat widget to appear.
 | CORS errors | Domain not whitelisted in Webex Engage |
 | Widget GUID not found | Verify GUID matches your asset |
 | loadstyles not received | Check GUID and Bind ID are correct |
+
+### Safari-Specific Issues
+
+Safari has known issues with WebSocket connections, especially in background tabs. WidgetScope helps diagnose these:
+
+| Issue | What to Check |
+|-------|---------------|
+| Widget disconnects when tab is hidden | Check **Visibility** panel - correlate with WebSocket close events |
+| WebSocket closes without `onclose` event | **Browser** panel shows if Safari < 17.3 (WebKit bug #247943) |
+| Storage errors in iframe | **Storage** panel shows ITP restrictions |
+| Connection drops on iOS | Check **Visibility** + **Network** panels for state changes |
+
+### WebSocket/MQTT Issues
+
+| Issue | What to Check |
+|-------|---------------|
+| No WebSocket connections | Widget may not have loaded - check Console Logs |
+| WebSocket shows "zombie" | Connection is stale - may need reconnection logic |
+| MQTT not detected | Your asset may use WebSocket protocol instead of MQTT |
+| MQTT CONNACK failure | Check return code in MQTT panel - usually auth issue |
 
 ---
 
