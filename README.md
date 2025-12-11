@@ -98,40 +98,57 @@ If you open the page without URL parameters, a setup modal appears automatically
 
 ### Change Settings Anytime
 
-Click the **Configure Widget** button in the sidebar to update your credentials.
+Click the **Configure** button in the nav bar to update your credentials.
 
 ---
 
 ## Dashboard Features
 
-### Left Sidebar
-- **Status indicators** - Widget and script load status
-- **Session info** - Session ID, duration, fingerprint
-- **Filter controls** - Hide noise from browser extensions
-- **Widget config** - Parsed configuration from the widget
+### Top Navigation Bar
 
-### Console Logs
-Captures `console.log`, `console.error`, `console.warn` from your page.
+The nav bar provides quick access to all actions and shows connection status at a glance.
 
-### PostMessages
-Shows all cross-origin messages. Look for:
-- `loadstyles` - Widget configuration received
-- `setlocal` - Widget storing data
-- Messages from `media.imi.chat` (tagged as WIDGET)
-
-### Network
-Tracks XHR and Fetch requests with timing.
-
-### Widget Events
-Lifecycle events like script loading and DOM changes.
-
-### Quick Actions
 | Button | What it does |
 |--------|--------------|
 | **Inspect** | Shows current widget DOM state |
 | **Ping** | Tests connectivity to IMI servers |
-| **Full Report** | Copies debug report to clipboard |
-| **Copy Config** | Copies widget config JSON |
+| **Full Report** | Copies comprehensive debug report to clipboard |
+| **Config** | Copies widget config JSON |
+| **Reload** | Reloads the widget |
+| **Clear** | Clears all log panels |
+| **Export** | Downloads debug data as JSON file |
+| **Configure** | Opens the configuration modal |
+
+The **Status Orb** in the nav bar shows connection health:
+- **Green** - Widget loaded and connected
+- **Yellow** - Warning (check logs)
+- **Red** - Error or disconnected
+
+### Left Sidebar
+- **Widget Status** - Script and widget load status indicators
+- **Session Info** - Session ID, start time, duration
+- **Filter Controls** - Hide noise from browser extensions or debug messages
+- **Widget Config** - Parsed configuration received from the widget (appears after widget loads)
+
+### Center Panels
+
+#### Console Logs
+Captures `console.log`, `console.error`, `console.warn` from your page. Color-coded by type.
+
+#### PostMessages
+Shows all cross-origin messages between frames. Look for:
+- `loadstyles` - Widget configuration received (this is the big one!)
+- `setlocal` - Widget storing data to localStorage
+- Messages from `media.imi.chat` (tagged as WIDGET)
+
+#### Network
+Tracks XHR and Fetch requests with timing and status codes.
+
+#### Widget Events
+Lifecycle events like script loading, DOM mutations, and state changes.
+
+### Right Side
+The right 25% of the screen is reserved for the actual chat widget to appear.
 
 ---
 
