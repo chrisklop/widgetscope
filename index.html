@@ -2622,6 +2622,10 @@ document.getElementById('openChat').onclick = function() {
                     );
                 }).catch(() => {});
 
+                // Log non-OK responses to Browser Console
+                if (!response.ok) {
+                    debugTools.addBrowserConsoleLog(`Fetch ${response.status}: ${url}`, 'error');
+                }
                 return response;
             }).catch(error => {
                 debugTools.addLog('network',
@@ -2629,6 +2633,7 @@ document.getElementById('openChat').onclick = function() {
                     { error: error.message },
                     'error'
                 );
+                debugTools.addBrowserConsoleLog(`Fetch error: ${error.message}`, 'error');
                 throw error;
             });
         };
@@ -2715,20 +2720,6 @@ document.getElementById('openChat').onclick = function() {
             debugTools.addLog('console', `Promise rejected: ${event.reason}`, null, 'error');
             debugTools.addBrowserConsoleLog(`Unhandled Promise rejection: ${event.reason}`, 'error');
         });
-
-        // Monitor for network errors on dynamically loaded resources
-        const originalFetch = window.fetch;
-        window.fetch = function(...args) {
-            return originalFetch.apply(this, args).then(response => {
-                if (!response.ok) {
-                    debugTools.addBrowserConsoleLog(`Fetch failed: ${response.status} ${response.url}`, 'error');
-                }
-                return response;
-            }).catch(err => {
-                debugTools.addBrowserConsoleLog(`Fetch error: ${err.message}`, 'error');
-                throw err;
-            });
-        };
 
         // Monitor dynamically added scripts for load errors (catches JSONP 404s)
         const scriptObserver = new MutationObserver(function(mutations) {
