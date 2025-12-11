@@ -1979,6 +1979,7 @@
 
             <div class="help-nav-section">Developer Reference</div>
             <div class="help-nav-item" data-section="postmessage-api">PostMessage API</div>
+            <div class="help-nav-item" data-section="websocket-mqtt">WebSocket & MQTT</div>
             <div class="help-nav-item" data-section="common-issues">Common Issues</div>
             <div class="help-nav-item" data-section="resources">External Resources</div>
         </nav>
@@ -2418,6 +2419,62 @@ document.getElementById('openChat').onclick = function() {
                 <p><strong>Debug:</strong> Check Webex Connect flow debugger and webhook logs.</p>
             </div>
 
+            <!-- WebSocket & MQTT Section -->
+            <div class="help-section" id="section-websocket-mqtt">
+                <h2>WebSocket & MQTT Monitoring</h2>
+                <p>The WebSocket and MQTT panels provide real-time monitoring of connection activity. However, there are important limitations to understand.</p>
+
+                <div class="help-warning">
+                    <h4>Cross-Origin Iframe Limitation</h4>
+                    <p>The Webex Connect/IMI chat widget runs inside a <strong>cross-origin iframe</strong> from <code>media.imi.chat</code>. Due to browser security restrictions, WidgetScope <strong>cannot intercept WebSocket or MQTT traffic</strong> that occurs inside this iframe.</p>
+                    <p>This means:</p>
+                    <ul>
+                        <li>Actual chat message content is not visible in the WebSocket/MQTT panels</li>
+                        <li>Connection open/close events inside the iframe cannot be captured</li>
+                        <li>The panels will show "widget-iframe (cross-origin)" as the connection source</li>
+                    </ul>
+                </div>
+
+                <h3>What CAN Be Monitored</h3>
+                <p>WidgetScope detects widget activity through indirect signals:</p>
+                <ul>
+                    <li><strong>Widget initialization</strong> - Detected via the <code>loadstyles</code> PostMessage</li>
+                    <li><strong>Storage operations</strong> - When the widget stores/retrieves data via PostMessage</li>
+                    <li><strong>Same-origin WebSockets</strong> - Any WebSocket connections made by your own page (not the widget iframe)</li>
+                </ul>
+
+                <h3>To See Actual WebSocket Traffic</h3>
+                <p>Use your browser's built-in Developer Tools:</p>
+                <ol>
+                    <li>Open DevTools (F12 or Cmd+Option+I)</li>
+                    <li>Go to the <strong>Network</strong> tab</li>
+                    <li>Click the <strong>WS</strong> filter button</li>
+                    <li>Start a chat conversation</li>
+                    <li>Click on any WebSocket connection to see messages</li>
+                </ol>
+
+                <div class="help-tip">
+                    <p><strong>Tip:</strong> In Safari, enable the Develop menu (Preferences → Advanced → Show Develop menu) to access DevTools.</p>
+                </div>
+
+                <h3>Why This Limitation Exists</h3>
+                <p>Browser security prevents JavaScript on one domain from accessing resources (including WebSocket connections) created by an iframe from a different domain. This is the <strong>Same-Origin Policy</strong> - a fundamental web security feature.</p>
+                <p>The IMI widget intentionally runs in a cross-origin iframe to:</p>
+                <ul>
+                    <li>Protect chat message privacy</li>
+                    <li>Isolate widget code from the host page</li>
+                    <li>Prevent tampering with chat sessions</li>
+                </ul>
+
+                <h3>Requesting Enhanced Events</h3>
+                <p>If you need client-side access to chat events (message sent, message received, etc.), you can request this feature from Webex:</p>
+                <ul>
+                    <li>Email: <a href="mailto:chatproduct@imimobile.com" class="help-link">chatproduct@imimobile.com</a></li>
+                    <li>Request: Client-side callbacks like <code>onMessageReceived</code> or <code>onMessageSent</code></li>
+                </ul>
+                <p>Currently, the widget only exposes the <code>imichat-widget:ready</code> event to the parent page.</p>
+            </div>
+
             <!-- Resources Section -->
             <div class="help-section" id="section-resources">
                 <h2>External Resources</h2>
@@ -2749,6 +2806,9 @@ document.getElementById('openChat').onclick = function() {
                         <span class="stat-item">&#8593;<strong id="wsMsgsSent">0</strong></span>
                         <span class="stat-item">&#8595;<strong id="wsMsgsReceived">0</strong></span>
                         <span class="stat-item zombie-stat">&#9760;<strong id="wsZombieCount">0</strong></span>
+                    </div>
+                    <div class="iframe-notice" id="wsIframeNotice" style="background: rgba(245,158,11,0.1); border-left: 3px solid #f59e0b; padding: 8px 10px; margin: 8px 0; font-size: 0.7rem; color: #f59e0b; display: none;">
+                        <strong>Note:</strong> Widget runs in cross-origin iframe. Actual chat traffic not visible here. <a href="#" onclick="showHelpSection('websocket-mqtt'); return false;" style="color: #60a5fa; text-decoration: underline;">Learn more</a>
                     </div>
                     <div class="expandable-log" id="wsLogContainer"></div>
                 </div>
@@ -4313,6 +4373,10 @@ document.getElementById('openChat').onclick = function() {
                         markedZombie: false,
                         isWidgetIframe: true
                     });
+
+                    // Show the cross-origin notice when widget iframe is detected
+                    const notice = document.getElementById('wsIframeNotice');
+                    if (notice) notice.style.display = 'block';
                 }
 
                 const wsData = this.websockets.get(wsId);
@@ -6329,6 +6393,12 @@ document.getElementById('openChat').onclick = function() {
                 document.querySelector('.help-content').scrollTop = 0;
             },
 
+            // Open help and navigate to specific section
+            showSection: function(sectionId) {
+                this.open();
+                this.navigateTo(sectionId);
+            },
+
             exportDocs: function() {
                 const markdown = `# Webex Connect Widget Debug Dashboard - Documentation
 
@@ -6594,6 +6664,11 @@ Configure in General Settings without http/https prefix:
                 helpPanel.close();
             }
         });
+
+        // Global helper function for inline onclick handlers
+        function showHelpSection(sectionId) {
+            helpPanel.showSection(sectionId);
+        }
     </script>
 </body>
 </html>
