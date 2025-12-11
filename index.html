@@ -13,7 +13,7 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            background: #0d0d0d;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -45,11 +45,11 @@
             position: fixed;
             top: 15px;
             right: calc(25% + 15px);
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
+            background: #1a1a1a;
+            color: #00d4aa;
+            border: 1px solid #2a2a2a;
             padding: 10px 16px;
-            border-radius: 8px;
+            border-radius: 6px;
             cursor: pointer;
             font-size: 0.8rem;
             font-weight: 600;
@@ -57,12 +57,163 @@
             align-items: center;
             gap: 6px;
             z-index: 1000;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            transition: all 0.2s ease;
         }
         .help-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+            background: #252525;
+            border-color: #00d4aa;
+            box-shadow: 0 4px 12px rgba(0, 212, 170, 0.15);
+        }
+
+        /* Status Orb - Animated Status Indicator */
+        .status-orb-container {
+            position: fixed;
+            top: 15px;
+            right: calc(25% + 140px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .status-orb {
+            width: 50px;
+            height: 50px;
+            position: relative;
+            cursor: pointer;
+        }
+        .status-orb-core {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            background: #00d4aa;
+            box-shadow: 0 0 20px rgba(0, 212, 170, 0.6);
+            transition: background 0.5s ease, box-shadow 0.5s ease;
+        }
+        .status-orb-core.warning {
+            background: #f59e0b;
+            box-shadow: 0 0 20px rgba(245, 158, 11, 0.6);
+        }
+        .status-orb-core.error {
+            background: #ef4444;
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.6);
+        }
+        .status-orb-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            border: 2px solid rgba(0, 212, 170, 0.4);
+            animation: orb-pulse 2s ease-in-out infinite;
+        }
+        .status-orb-ring.warning {
+            border-color: rgba(245, 158, 11, 0.4);
+        }
+        .status-orb-ring.error {
+            border-color: rgba(239, 68, 68, 0.4);
+        }
+        .status-orb-ring:nth-child(2) {
+            width: 28px;
+            height: 28px;
+            animation-delay: 0s;
+        }
+        .status-orb-ring:nth-child(3) {
+            width: 36px;
+            height: 36px;
+            animation-delay: 0.3s;
+        }
+        .status-orb-ring:nth-child(4) {
+            width: 44px;
+            height: 44px;
+            animation-delay: 0.6s;
+        }
+        @keyframes orb-pulse {
+            0%, 100% {
+                opacity: 0.3;
+                transform: translate(-50%, -50%) scale(1);
+            }
+            50% {
+                opacity: 0.8;
+                transform: translate(-50%, -50%) scale(1.1);
+            }
+        }
+        /* Floating particles around the orb */
+        .status-orb-particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: #00d4aa;
+            opacity: 0.6;
+        }
+        .status-orb-particle.warning {
+            background: #f59e0b;
+        }
+        .status-orb-particle.error {
+            background: #ef4444;
+        }
+        .status-orb-particle:nth-child(5) {
+            top: 5px;
+            left: 23px;
+            animation: float-particle 3s ease-in-out infinite;
+        }
+        .status-orb-particle:nth-child(6) {
+            top: 23px;
+            left: 42px;
+            animation: float-particle 3s ease-in-out infinite 0.5s;
+        }
+        .status-orb-particle:nth-child(7) {
+            top: 40px;
+            left: 18px;
+            animation: float-particle 3s ease-in-out infinite 1s;
+        }
+        .status-orb-particle:nth-child(8) {
+            top: 15px;
+            left: 5px;
+            animation: float-particle 3s ease-in-out infinite 1.5s;
+        }
+        .status-orb-particle:nth-child(9) {
+            top: 35px;
+            left: 35px;
+            animation: float-particle 3s ease-in-out infinite 2s;
+        }
+        @keyframes float-particle {
+            0%, 100% {
+                transform: translate(0, 0);
+                opacity: 0.4;
+            }
+            25% {
+                transform: translate(3px, -3px);
+                opacity: 0.8;
+            }
+            50% {
+                transform: translate(-2px, 2px);
+                opacity: 0.5;
+            }
+            75% {
+                transform: translate(2px, 3px);
+                opacity: 0.7;
+            }
+        }
+        .status-orb-label {
+            font-size: 0.7rem;
+            color: #666;
+            white-space: nowrap;
+        }
+        .status-orb-label span {
+            color: #00d4aa;
+            font-weight: 600;
+        }
+        .status-orb-label span.warning {
+            color: #f59e0b;
+        }
+        .status-orb-label span.error {
+            color: #ef4444;
         }
 
         /* Help Panel - Slides from Left */
@@ -90,7 +241,7 @@
             width: 70%;
             max-width: 900px;
             height: 100vh;
-            background: #1a1a2e;
+            background: #141414;
             z-index: 9999;
             transform: translateX(-100%);
             transition: transform 0.3s ease;
@@ -104,14 +255,14 @@
         /* Help Navigation Sidebar */
         .help-nav {
             width: 220px;
-            background: #12121f;
+            background: #0d0d0d;
             padding: 20px 0;
             overflow-y: auto;
             flex-shrink: 0;
         }
         .help-nav-header {
             padding: 0 20px 20px;
-            border-bottom: 1px solid #2d2d4a;
+            border-bottom: 1px solid #1f1f1f;
             margin-bottom: 10px;
         }
         .help-nav-header h2 {
@@ -120,12 +271,12 @@
             margin-bottom: 4px;
         }
         .help-nav-header p {
-            color: #888;
+            color: #666;
             font-size: 0.7rem;
         }
         .help-nav-section {
             padding: 8px 20px;
-            color: #667eea;
+            color: #00d4aa;
             font-size: 0.65rem;
             text-transform: uppercase;
             font-weight: 600;
@@ -133,20 +284,20 @@
         }
         .help-nav-item {
             padding: 10px 20px;
-            color: #aaa;
+            color: #888;
             font-size: 0.8rem;
             cursor: pointer;
             transition: all 0.2s;
             border-left: 3px solid transparent;
         }
         .help-nav-item:hover {
-            background: #1e1e34;
+            background: #1a1a1a;
             color: #fff;
         }
         .help-nav-item.active {
-            background: #1e1e34;
-            color: #667eea;
-            border-left-color: #667eea;
+            background: #1a1a1a;
+            color: #00d4aa;
+            border-left-color: #00d4aa;
         }
 
         /* Help Content Area */
@@ -159,9 +310,9 @@
             position: absolute;
             top: 15px;
             right: 15px;
-            background: #2d2d4a;
+            background: #1f1f1f;
             border: none;
-            color: #888;
+            color: #666;
             width: 36px;
             height: 36px;
             border-radius: 50%;
@@ -170,8 +321,8 @@
             transition: all 0.2s;
         }
         .help-close:hover {
-            background: #667eea;
-            color: #fff;
+            background: #00d4aa;
+            color: #0d0d0d;
         }
 
         .help-section {
@@ -186,11 +337,11 @@
             margin-bottom: 8px;
         }
         .help-section h3 {
-            color: #667eea;
+            color: #00d4aa;
             font-size: 1rem;
             margin: 24px 0 12px;
             padding-bottom: 8px;
-            border-bottom: 1px solid #2d2d4a;
+            border-bottom: 1px solid #1f1f1f;
         }
         .help-section h4 {
             color: #fff;
@@ -213,16 +364,16 @@
             margin-bottom: 6px;
         }
         .help-section code {
-            background: #2d2d4a;
-            color: #9cdcfe;
+            background: #1f1f1f;
+            color: #00d4aa;
             padding: 2px 6px;
             border-radius: 4px;
             font-family: 'Monaco', 'Menlo', monospace;
             font-size: 0.8rem;
         }
         .help-section pre {
-            background: #12121f;
-            border: 1px solid #2d2d4a;
+            background: #0d0d0d;
+            border: 1px solid #1f1f1f;
             border-radius: 8px;
             padding: 16px;
             overflow-x: auto;
@@ -231,13 +382,13 @@
         .help-section pre code {
             background: none;
             padding: 0;
-            color: #9cdcfe;
+            color: #7dd3c0;
             font-size: 0.75rem;
             line-height: 1.5;
         }
         .help-tip {
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
-            border-left: 4px solid #667eea;
+            background: rgba(0, 212, 170, 0.08);
+            border-left: 4px solid #00d4aa;
             padding: 12px 16px;
             border-radius: 0 8px 8px 0;
             margin: 16px 0;
@@ -258,21 +409,21 @@
             margin: 0;
         }
         .help-link {
-            color: #667eea;
+            color: #00d4aa;
             text-decoration: none;
         }
         .help-link:hover {
             text-decoration: underline;
         }
         .tool-card {
-            background: #1e1e34;
-            border: 1px solid #2d2d4a;
+            background: #1a1a1a;
+            border: 1px solid #252525;
             border-radius: 10px;
             padding: 16px;
             margin: 12px 0;
         }
         .tool-card h4 {
-            color: #667eea;
+            color: #00d4aa;
             margin: 0 0 8px;
             display: flex;
             align-items: center;
@@ -289,13 +440,13 @@
             font-size: 0.8rem;
         }
         .config-table th, .config-table td {
-            border: 1px solid #2d2d4a;
+            border: 1px solid #252525;
             padding: 10px;
             text-align: left;
         }
         .config-table th {
-            background: #1e1e34;
-            color: #667eea;
+            background: #1a1a1a;
+            color: #00d4aa;
             font-weight: 600;
         }
         .config-table td {
@@ -316,14 +467,14 @@
         }
 
         .container {
-            background: white;
+            background: #141414;
             border-radius: 12px;
             padding: 16px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            border: 1px solid #1f1f1f;
         }
 
         h1 {
-            color: #1a1a2e;
+            color: #ffffff;
             font-size: 1.2rem;
             margin-bottom: 4px;
         }
@@ -335,7 +486,7 @@
         }
 
         .status-card {
-            background: #f8f9fa;
+            background: #1a1a1a;
             border-radius: 8px;
             padding: 10px;
             margin-bottom: 10px;
@@ -364,17 +515,20 @@
 
         .badge {
             display: inline-block;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            background: #1f1f1f;
+            color: #00d4aa;
             padding: 3px 10px;
             border-radius: 20px;
             font-size: 0.65rem;
             font-weight: 600;
             margin-bottom: 10px;
+            border: 1px solid #2a2a2a;
         }
 
         .debug-badge {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            background: #1f1f1f;
+            color: #f59e0b;
+            border: 1px solid #2a2a2a;
             margin-left: 6px;
         }
 
@@ -386,20 +540,20 @@
         }
 
         .state-item {
-            background: #f8f9fa;
+            background: #1a1a1a;
             padding: 8px;
             border-radius: 6px;
         }
 
         .state-label {
-            color: #888;
+            color: #666;
             font-size: 0.6rem;
             margin-bottom: 2px;
             text-transform: uppercase;
         }
 
         .state-value {
-            color: #1a1a2e;
+            color: #e0e0e0;
             font-size: 0.85rem;
             font-weight: 600;
         }
@@ -416,14 +570,14 @@
         }
 
         .control-btn {
-            background: #667eea;
+            background: #00d4aa;
             border: none;
-            color: white;
+            color: #0d0d0d;
             padding: 8px 12px;
             border-radius: 6px;
             cursor: pointer;
             font-size: 0.75rem;
-            font-weight: 500;
+            font-weight: 600;
             transition: all 0.2s;
             display: flex;
             align-items: center;
@@ -432,17 +586,19 @@
         }
 
         .control-btn:hover {
-            background: #5a6fd6;
+            background: #00b894;
             transform: translateY(-1px);
         }
 
         .control-btn.secondary {
-            background: #e9ecef;
-            color: #495057;
+            background: #1f1f1f;
+            color: #888;
+            border: 1px solid #2a2a2a;
         }
 
         .control-btn.secondary:hover {
-            background: #dee2e6;
+            background: #252525;
+            color: #fff;
         }
 
         .btn-row {
@@ -456,9 +612,10 @@
 
         /* Widget Config Panel */
         .config-panel {
-            background: #1e1e1e;
+            background: #141414;
             border-radius: 10px;
             padding: 12px;
+            border: 1px solid #1f1f1f;
         }
 
         .config-panel h3 {
@@ -487,7 +644,7 @@
         }
 
         .config-value {
-            color: #9cdcfe;
+            color: #7dd3c0;
             font-family: 'Monaco', 'Menlo', monospace;
             max-width: 140px;
             overflow: hidden;
@@ -541,7 +698,7 @@
 
         /* Debug Panel Styles */
         .debug-panel {
-            background: #1e1e1e;
+            background: #141414;
             border-radius: 10px;
             overflow: hidden;
             display: flex;
@@ -549,15 +706,16 @@
             min-height: 0;
             flex: 1;
             max-height: 100%;
+            border: 1px solid #1f1f1f;
         }
 
         .panel-header {
-            background: #2d2d2d;
+            background: #1a1a1a;
             padding: 8px 10px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid #3d3d3d;
+            border-bottom: 1px solid #1f1f1f;
             flex-shrink: 0;
         }
 
@@ -577,21 +735,23 @@
         }
 
         .panel-count {
-            background: #667eea;
-            color: white;
+            background: #00d4aa;
+            color: #0d0d0d;
             padding: 2px 6px;
             border-radius: 8px;
             font-size: 0.6rem;
+            font-weight: 600;
         }
 
         .panel-count.filtered {
-            background: #6c757d;
+            background: #3a3a3a;
+            color: #888;
         }
 
         .copy-btn {
-            background: #3d3d3d;
-            border: none;
-            color: #888;
+            background: #1f1f1f;
+            border: 1px solid #2a2a2a;
+            color: #666;
             padding: 3px 6px;
             border-radius: 4px;
             cursor: pointer;
@@ -603,13 +763,15 @@
         }
 
         .copy-btn:hover {
-            background: #4d4d4d;
+            background: #252525;
             color: #fff;
+            border-color: #3a3a3a;
         }
 
         .copy-btn.copied {
-            background: #28a745;
-            color: #fff;
+            background: #00d4aa;
+            color: #0d0d0d;
+            border-color: #00d4aa;
         }
 
         .panel-content {
@@ -628,8 +790,8 @@
             padding: 6px 8px;
             margin: 3px 0;
             border-radius: 5px;
-            background: #2a2a2a;
-            border-left: 3px solid #667eea;
+            background: #1a1a1a;
+            border-left: 3px solid #3a3a3a;
             position: relative;
         }
 
@@ -643,12 +805,13 @@
         }
 
         .collapse-count {
-            background: #667eea;
-            color: white;
+            background: #00d4aa;
+            color: #0d0d0d;
             padding: 1px 6px;
             border-radius: 10px;
             font-size: 0.6rem;
             margin-left: 8px;
+            font-weight: 600;
         }
 
         .entry-copy-btn {
@@ -657,9 +820,9 @@
             right: 4px;
             opacity: 0;
             transition: opacity 0.2s;
-            background: #3d3d3d;
+            background: #252525;
             border: none;
-            color: #888;
+            color: #666;
             padding: 2px 5px;
             border-radius: 3px;
             cursor: pointer;
@@ -667,51 +830,51 @@
         }
 
         .entry-copy-btn:hover {
-            background: #4d4d4d;
+            background: #3a3a3a;
             color: #fff;
         }
 
         .entry-copy-btn.copied {
-            background: #28a745;
-            color: #fff;
+            background: #00d4aa;
+            color: #0d0d0d;
             opacity: 1;
         }
 
         .log-entry.error {
-            border-left-color: #f5576c;
-            background: #2a1a1a;
+            border-left-color: #ef4444;
+            background: #1c1414;
         }
 
         .log-entry.warn {
-            border-left-color: #ffc107;
-            background: #2a2a1a;
+            border-left-color: #f59e0b;
+            background: #1c1a14;
         }
 
         .log-entry.success {
-            border-left-color: #28a745;
-            background: #1a2a1a;
+            border-left-color: #00d4aa;
+            background: #141c1a;
         }
 
         .log-entry.postmessage {
-            border-left-color: #17a2b8;
-            background: #1a2a2a;
+            border-left-color: #06b6d4;
+            background: #141a1c;
         }
 
         .log-entry.widget-message {
-            border-left-color: #28a745;
-            background: #1a2a1a;
+            border-left-color: #00d4aa;
+            background: #141c1a;
             border-left-width: 4px;
         }
 
         .log-entry.browser-noise {
-            border-left-color: #6c757d;
-            background: #252525;
+            border-left-color: #4a4a4a;
+            background: #181818;
             opacity: 0.7;
         }
 
         .log-entry.network {
-            border-left-color: #fd7e14;
-            background: #2a2a1a;
+            border-left-color: #f59e0b;
+            background: #1c1a14;
         }
 
         .source-tag {
@@ -724,18 +887,18 @@
         }
 
         .source-tag.widget {
-            background: #28a745;
-            color: white;
+            background: #00d4aa;
+            color: #0d0d0d;
         }
 
         .source-tag.browser {
-            background: #6c757d;
-            color: white;
+            background: #4a4a4a;
+            color: #ccc;
         }
 
         .source-tag.debug {
-            background: #17a2b8;
-            color: white;
+            background: #06b6d4;
+            color: #0d0d0d;
         }
 
         .log-time {
@@ -750,8 +913,8 @@
         }
 
         .log-json {
-            color: #9cdcfe;
-            background: #1a1a1a;
+            color: #7dd3c0;
+            background: #0d0d0d;
             padding: 6px;
             border-radius: 4px;
             margin-top: 4px;
@@ -762,10 +925,11 @@
 
         /* Quick Actions Panel */
         .quick-actions {
-            background: #1e1e1e;
+            background: #141414;
             border-radius: 10px;
             padding: 12px;
             flex-shrink: 0;
+            border: 1px solid #1f1f1f;
         }
 
         .quick-actions h3 {
@@ -781,9 +945,9 @@
         }
 
         .action-btn {
-            background: #2d2d2d;
-            border: 1px solid #3d3d3d;
-            color: #fff;
+            background: #1a1a1a;
+            border: 1px solid #252525;
+            color: #ccc;
             padding: 10px;
             border-radius: 6px;
             cursor: pointer;
@@ -793,8 +957,9 @@
         }
 
         .action-btn:hover {
-            background: #3d3d3d;
-            border-color: #667eea;
+            background: #252525;
+            border-color: #00d4aa;
+            color: #fff;
         }
 
         .action-btn .icon {
@@ -811,13 +976,18 @@
 
         .panel-content::-webkit-scrollbar-track,
         .sidebar::-webkit-scrollbar-track {
-            background: #1e1e1e;
+            background: #0d0d0d;
         }
 
         .panel-content::-webkit-scrollbar-thumb,
         .sidebar::-webkit-scrollbar-thumb {
-            background: #4d4d4d;
+            background: #2a2a2a;
             border-radius: 3px;
+        }
+
+        .panel-content::-webkit-scrollbar-thumb:hover,
+        .sidebar::-webkit-scrollbar-thumb:hover {
+            background: #3a3a3a;
         }
 
         /* Toast Notification */
@@ -826,12 +996,13 @@
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%) translateY(100px);
-            background: #28a745;
-            color: white;
+            background: #00d4aa;
+            color: #0d0d0d;
             padding: 10px 20px;
             border-radius: 8px;
             font-size: 0.8rem;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            font-weight: 600;
+            box-shadow: 0 4px 20px rgba(0, 212, 170, 0.2);
             transition: transform 0.3s ease;
             z-index: 10000;
         }
@@ -857,12 +1028,13 @@
             display: flex;
         }
         .setup-content {
-            background: #1e1e34;
+            background: #141414;
             border-radius: 16px;
             padding: 30px;
             max-width: 480px;
             width: 90%;
             box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            border: 1px solid #252525;
         }
         .setup-content h2 {
             color: #fff;
@@ -879,7 +1051,7 @@
         }
         .setup-field label {
             display: block;
-            color: #667eea;
+            color: #00d4aa;
             font-size: 0.8rem;
             font-weight: 600;
             margin-bottom: 6px;
@@ -887,9 +1059,9 @@
         .setup-field input {
             width: 100%;
             padding: 12px;
-            border: 2px solid #2d2d4a;
+            border: 2px solid #252525;
             border-radius: 8px;
-            background: #12121f;
+            background: #0d0d0d;
             color: #fff;
             font-size: 0.85rem;
             font-family: 'Monaco', 'Menlo', monospace;
@@ -897,7 +1069,7 @@
         }
         .setup-field input:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #00d4aa;
         }
         .setup-field input::placeholder {
             color: #555;
@@ -924,25 +1096,27 @@
             transition: all 0.2s;
         }
         .setup-btn.primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            background: #00d4aa;
+            color: #0d0d0d;
         }
         .setup-btn.primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 4px 15px rgba(0, 212, 170, 0.3);
+            background: #00b894;
         }
         .setup-btn.secondary {
-            background: #2d2d4a;
+            background: #252525;
             color: #888;
+            border: 1px solid #333;
         }
         .setup-btn.secondary:hover {
-            background: #3d3d5a;
+            background: #333;
             color: #fff;
         }
         .setup-help {
             margin-top: 24px;
             padding-top: 20px;
-            border-top: 1px solid #2d2d4a;
+            border-top: 1px solid #252525;
             text-align: center;
         }
         .setup-help p {
@@ -952,8 +1126,8 @@
         }
         .setup-help code {
             display: inline-block;
-            background: #12121f;
-            color: #9cdcfe;
+            background: #0d0d0d;
+            color: #7dd3c0;
             padding: 6px 12px;
             border-radius: 6px;
             font-size: 0.75rem;
@@ -992,6 +1166,24 @@
     <button class="help-btn" onclick="helpPanel.toggle()">
         <span>&#128218;</span> Documentation
     </button>
+
+    <!-- Status Orb - Animated Status Indicator -->
+    <div class="status-orb-container" id="statusOrbContainer" title="System Status">
+        <div class="status-orb" id="statusOrb" onclick="statusOrb.showDetails()">
+            <div class="status-orb-core" id="statusOrbCore"></div>
+            <div class="status-orb-ring" id="statusOrbRing1"></div>
+            <div class="status-orb-ring" id="statusOrbRing2"></div>
+            <div class="status-orb-ring" id="statusOrbRing3"></div>
+            <div class="status-orb-particle" id="statusOrbParticle1"></div>
+            <div class="status-orb-particle" id="statusOrbParticle2"></div>
+            <div class="status-orb-particle" id="statusOrbParticle3"></div>
+            <div class="status-orb-particle" id="statusOrbParticle4"></div>
+            <div class="status-orb-particle" id="statusOrbParticle5"></div>
+        </div>
+        <div class="status-orb-label">
+            <span id="statusOrbText">Initializing</span>
+        </div>
+    </div>
 
     <!-- Help Panel Overlay -->
     <div class="help-overlay" id="helpOverlay" onclick="helpPanel.close()"></div>
@@ -1513,7 +1705,7 @@ document.getElementById('openChat').onclick = function() {
                 <span class="badge debug-badge">Debug Mode</span>
                 <h1>WidgetScope</h1>
                 <p class="subtitle">Webex Connect Debug Dashboard</p>
-                <button class="control-btn" onclick="showSetupModal()" style="margin-bottom: 10px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <button class="control-btn" onclick="showSetupModal()" style="margin-bottom: 10px;">
                     <span>&#9881;</span> Configure Widget
                 </button>
 
@@ -1704,11 +1896,11 @@ document.getElementById('openChat').onclick = function() {
     <div class="toast" id="toast">Copied to clipboard!</div>
 
     <!-- Setup Required Banner (shown when no credentials) -->
-    <div id="setupBanner" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: linear-gradient(135deg, #1e1e34 0%, #2d2d4a 100%); padding: 40px; border-radius: 16px; text-align: center; z-index: 1000; box-shadow: 0 20px 60px rgba(0,0,0,0.5); max-width: 400px;">
+    <div id="setupBanner" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #141414; border: 1px solid #252525; padding: 40px; border-radius: 16px; text-align: center; z-index: 1000; box-shadow: 0 20px 60px rgba(0,0,0,0.5); max-width: 400px;">
         <div style="font-size: 3rem; margin-bottom: 16px;">&#9881;</div>
         <h2 style="color: #fff; margin-bottom: 12px;">Setup Required</h2>
         <p style="color: #888; margin-bottom: 24px; font-size: 0.9rem;">Configure your Webex Connect widget credentials to get started.</p>
-        <button onclick="showSetupModal()" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 14px 32px; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(102,126,234,0.4)';" onmouseout="this.style.transform='none'; this.style.boxShadow='none';">
+        <button onclick="showSetupModal()" style="background: #00d4aa; color: #0d0d0d; border: none; padding: 14px 32px; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(0,212,170,0.3)'; this.style.background='#00b894';" onmouseout="this.style.transform='none'; this.style.boxShadow='none'; this.style.background='#00d4aa';">
             <span>&#9881;</span> Configure Widget
         </button>
     </div>
@@ -1724,8 +1916,8 @@ document.getElementById('openChat').onclick = function() {
 
             <!-- Quick Paste Option -->
             <div class="setup-field" style="margin-bottom: 24px;">
-                <label style="color: #28a745;">Quick Setup - Paste Installation Snippet</label>
-                <textarea id="setupSnippet" rows="3" placeholder="Paste the entire installation code from Webex Engage here..." style="width: 100%; padding: 12px; border: 2px solid #2d2d4a; border-radius: 8px; background: #12121f; color: #fff; font-size: 0.75rem; font-family: 'Monaco', 'Menlo', monospace; resize: vertical;"></textarea>
+                <label style="color: #00d4aa;">Quick Setup - Paste Installation Snippet</label>
+                <textarea id="setupSnippet" rows="3" placeholder="Paste the entire installation code from Webex Engage here..." style="width: 100%; padding: 12px; border: 2px solid #252525; border-radius: 8px; background: #0d0d0d; color: #fff; font-size: 0.75rem; font-family: 'Monaco', 'Menlo', monospace; resize: vertical;"></textarea>
                 <small>Copy from: Webex Engage &rarr; Assets &rarr; Channel Assets &rarr; LiveChat &rarr; Edit &rarr; Installation</small>
             </div>
 
@@ -1754,15 +1946,21 @@ document.getElementById('openChat').onclick = function() {
                 <button class="setup-btn primary" onclick="saveConfig()">Save & Load Widget</button>
             </div>
 
-            <div class="setup-help" style="margin-top: 20px; padding-top: 16px; border-top: 1px solid #2d2d4a;">
-                <div style="background: #2d1f1f; border: 1px solid #dc3545; border-radius: 8px; padding: 12px; margin-bottom: 12px;">
-                    <p style="color: #dc3545; font-size: 0.75rem; font-weight: 600; margin-bottom: 6px;">&#9888; Two Configuration Steps Required</p>
-                    <p style="color: #ccc; font-size: 0.7rem; margin-bottom: 8px;"><strong>1. Webex Engage:</strong> Add <code style="background: #1a1a2e; padding: 2px 6px; border-radius: 4px;">widgetscope.vercel.app</code> to your LiveChat asset's <strong>Websites</strong> tab.</p>
+            <div class="setup-help" style="margin-top: 20px; padding-top: 16px; border-top: 1px solid #252525;">
+                <div style="background: #1c1414; border: 1px solid #ef4444; border-radius: 8px; padding: 12px; margin-bottom: 12px;">
+                    <p style="color: #ef4444; font-size: 0.75rem; font-weight: 600; margin-bottom: 6px;">&#9888; Two Configuration Steps Required</p>
+                    <p style="color: #ccc; font-size: 0.7rem; margin-bottom: 8px;"><strong>1. Webex Engage:</strong> Add <code style="background: #0d0d0d; padding: 2px 6px; border-radius: 4px;">widgetscope.vercel.app</code> to your LiveChat asset's <strong>Websites</strong> tab.</p>
                     <p style="color: #ccc; font-size: 0.7rem; margin: 0;"><strong>2. Webex Connect Flow:</strong> Add the domain to your flow's Custom Variables:<br>
-                    <span style="color: #888; font-size: 0.65rem;">Services &rarr; [Your Service] &rarr; Flows &rarr; [Your Flow] &rarr; Edit &rarr; Settings (top right, no node selected) &rarr; Custom Variables &rarr; <code style="background: #1a1a2e; padding: 2px 4px; border-radius: 4px;">liveChatDomain</code></span></p>
+                    <span style="color: #888; font-size: 0.65rem;">Services &rarr; [Your Service] &rarr; Flows &rarr; [Your Flow] &rarr; Edit &rarr; Settings (top right, no node selected) &rarr; Custom Variables &rarr; <code style="background: #0d0d0d; padding: 2px 4px; border-radius: 4px;">liveChatDomain</code></span></p>
                 </div>
                 <p style="color: #888; font-size: 0.75rem; margin-bottom: 8px;">Need help finding your credentials?</p>
-                <a href="https://webexcc.github.io/pages/Digital/" target="_blank" style="color: #667eea; font-size: 0.75rem;">View setup guide &rarr;</a>
+                <a href="https://webexcc.github.io/pages/Digital/" target="_blank" style="color: #00d4aa; font-size: 0.75rem;">View setup guide &rarr;</a>
+
+                <div style="margin-top: 16px; padding-top: 12px; border-top: 1px solid #252525;">
+                    <p style="color: #666; font-size: 0.65rem; font-style: italic; line-height: 1.5;">
+                        <strong style="color: #888;">Disclaimer:</strong> This is not an official Cisco or Webex product. Created by a Webex Collaboration Engineer for better visibility when configuring webchat. Feel free to reach out with feedback or if you get stuck — no guarantees but happy to try to help!
+                    </p>
+                </div>
             </div>
         </div>
     </div>
@@ -1960,6 +2158,123 @@ document.getElementById('openChat').onclick = function() {
                 'debug_panel',
                 'debug_test'
             ]
+        };
+
+        // Status Orb Controller
+        const statusOrb = {
+            currentState: 'initializing', // 'ok', 'warning', 'error', 'initializing'
+            hasErrors: false,
+            hasWarnings: false,
+            warningCount: 0,
+            errorCount: 0,
+
+            setState: function(state) {
+                this.currentState = state;
+                const core = document.getElementById('statusOrbCore');
+                const rings = [
+                    document.getElementById('statusOrbRing1'),
+                    document.getElementById('statusOrbRing2'),
+                    document.getElementById('statusOrbRing3')
+                ];
+                const particles = [
+                    document.getElementById('statusOrbParticle1'),
+                    document.getElementById('statusOrbParticle2'),
+                    document.getElementById('statusOrbParticle3'),
+                    document.getElementById('statusOrbParticle4'),
+                    document.getElementById('statusOrbParticle5')
+                ];
+                const label = document.getElementById('statusOrbText');
+
+                // Remove all state classes
+                const stateClasses = ['warning', 'error'];
+                [core, ...rings, ...particles].forEach(el => {
+                    if (el) stateClasses.forEach(cls => el.classList.remove(cls));
+                });
+                if (label) stateClasses.forEach(cls => label.classList.remove(cls));
+
+                // Apply new state
+                if (state === 'error') {
+                    [core, ...rings, ...particles].forEach(el => {
+                        if (el) el.classList.add('error');
+                    });
+                    if (label) {
+                        label.classList.add('error');
+                        label.textContent = 'Error';
+                    }
+                } else if (state === 'warning') {
+                    [core, ...rings, ...particles].forEach(el => {
+                        if (el) el.classList.add('warning');
+                    });
+                    if (label) {
+                        label.classList.add('warning');
+                        label.textContent = 'Warning';
+                    }
+                } else if (state === 'ok') {
+                    if (label) label.textContent = 'Connected';
+                } else {
+                    if (label) label.textContent = 'Initializing';
+                }
+            },
+
+            checkStatus: function() {
+                // Determine current status based on all factors
+                if (this.hasErrors || this.errorCount > 0) {
+                    this.setState('error');
+                } else if (this.hasWarnings || this.warningCount > 0) {
+                    this.setState('warning');
+                } else {
+                    // Check if widget is properly loaded
+                    const widgetState = document.getElementById('widgetState');
+                    const scriptState = document.getElementById('scriptState');
+
+                    if (widgetState && scriptState) {
+                        const widgetReady = widgetState.classList.contains('online');
+                        const scriptReady = scriptState.classList.contains('online');
+
+                        if (widgetReady && scriptReady) {
+                            this.setState('ok');
+                        } else if (widgetState.textContent === 'Not Configured' ||
+                                   widgetState.textContent === 'Domain Not Whitelisted') {
+                            this.setState('error');
+                        } else {
+                            this.setState('initializing');
+                        }
+                    }
+                }
+            },
+
+            logError: function() {
+                this.errorCount++;
+                this.hasErrors = true;
+                this.checkStatus();
+            },
+
+            logWarning: function() {
+                this.warningCount++;
+                this.hasWarnings = true;
+                this.checkStatus();
+            },
+
+            clearAlerts: function() {
+                this.hasErrors = false;
+                this.hasWarnings = false;
+                this.warningCount = 0;
+                this.errorCount = 0;
+                this.checkStatus();
+            },
+
+            showDetails: function() {
+                const status = this.currentState;
+                const details = {
+                    status: status,
+                    errors: this.errorCount,
+                    warnings: this.warningCount,
+                    widget: document.getElementById('widgetState')?.textContent || 'unknown',
+                    script: document.getElementById('scriptState')?.textContent || 'unknown'
+                };
+                console.log('Status Orb Details:', details);
+                showToast(`Status: ${status.toUpperCase()} | Errors: ${this.errorCount} | Warnings: ${this.warningCount}`);
+            }
         };
 
         // Debug Tools Object
@@ -2384,6 +2699,8 @@ document.getElementById('openChat').onclick = function() {
                 this.updateFilterStats();
                 document.getElementById('messageCount').textContent = '0';
                 this.addLog('events', 'Logs cleared', null, 'info');
+                // Clear status orb alerts
+                statusOrb.clearAlerts();
             },
 
             exportLogs: function() {
@@ -2481,6 +2798,8 @@ document.getElementById('openChat').onclick = function() {
             updateStatus: function(text, color) {
                 document.getElementById('statusText').textContent = text;
                 document.getElementById('statusDot').style.background = color;
+                // Update status orb based on status
+                setTimeout(() => statusOrb.checkStatus(), 100);
             }
         };
 
@@ -2527,11 +2846,15 @@ document.getElementById('openChat').onclick = function() {
         console.error = function(...args) {
             originalConsole.error(...args);
             safeLogToPanel('console', args, 'error');
+            // Update status orb for errors
+            statusOrb.logError();
         };
 
         console.warn = function(...args) {
             originalConsole.warn(...args);
             safeLogToPanel('console', args, 'warn');
+            // Update status orb for warnings
+            statusOrb.logWarning();
         };
 
         console.info = function(...args) {
