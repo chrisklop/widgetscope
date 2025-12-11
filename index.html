@@ -68,13 +68,15 @@
 
         /* Status Orb - Animated Status Indicator */
         .status-orb-container {
-            position: fixed;
-            top: 15px;
-            right: calc(25% + 140px);
-            z-index: 1000;
+            background: #141414;
+            border-radius: 10px;
+            padding: 16px;
+            border: 1px solid #1f1f1f;
             display: flex;
             align-items: center;
-            gap: 10px;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 0;
         }
         .status-orb {
             width: 50px;
@@ -1167,24 +1169,6 @@
         <span>&#128218;</span> Documentation
     </button>
 
-    <!-- Status Orb - Animated Status Indicator -->
-    <div class="status-orb-container" id="statusOrbContainer" title="System Status">
-        <div class="status-orb" id="statusOrb" onclick="statusOrb.showDetails()">
-            <div class="status-orb-core" id="statusOrbCore"></div>
-            <div class="status-orb-ring" id="statusOrbRing1"></div>
-            <div class="status-orb-ring" id="statusOrbRing2"></div>
-            <div class="status-orb-ring" id="statusOrbRing3"></div>
-            <div class="status-orb-particle" id="statusOrbParticle1"></div>
-            <div class="status-orb-particle" id="statusOrbParticle2"></div>
-            <div class="status-orb-particle" id="statusOrbParticle3"></div>
-            <div class="status-orb-particle" id="statusOrbParticle4"></div>
-            <div class="status-orb-particle" id="statusOrbParticle5"></div>
-        </div>
-        <div class="status-orb-label">
-            <span id="statusOrbText">Initializing</span>
-        </div>
-    </div>
-
     <!-- Help Panel Overlay -->
     <div class="help-overlay" id="helpOverlay" onclick="helpPanel.close()"></div>
 
@@ -1824,6 +1808,24 @@ document.getElementById('openChat').onclick = function() {
                 </div>
             </div>
             <div class="panel-content" id="postMessageLogs"></div>
+        </div>
+
+        <!-- Status Orb - Animated Status Indicator -->
+        <div class="status-orb-container" id="statusOrbContainer" title="System Status">
+            <div class="status-orb" id="statusOrb" onclick="statusOrb.showDetails()">
+                <div class="status-orb-core" id="statusOrbCore"></div>
+                <div class="status-orb-ring" id="statusOrbRing1"></div>
+                <div class="status-orb-ring" id="statusOrbRing2"></div>
+                <div class="status-orb-ring" id="statusOrbRing3"></div>
+                <div class="status-orb-particle" id="statusOrbParticle1"></div>
+                <div class="status-orb-particle" id="statusOrbParticle2"></div>
+                <div class="status-orb-particle" id="statusOrbParticle3"></div>
+                <div class="status-orb-particle" id="statusOrbParticle4"></div>
+                <div class="status-orb-particle" id="statusOrbParticle5"></div>
+            </div>
+            <div class="status-orb-label">
+                <span id="statusOrbText">Initializing</span>
+            </div>
         </div>
 
         <!-- Column 4 - Quick Actions (top) -->
