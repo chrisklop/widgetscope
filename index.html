@@ -2695,17 +2695,61 @@ document.getElementById('openChat').onclick = function() {
             }
         }
 
-        // Global error handler
+        // Global error handler - captures JS errors
         window.addEventListener('error', function(event) {
-            debugTools.addLog('console', `Error: ${event.message}`, {
-                file: event.filename?.split('/').pop(),
-                line: event.lineno
-            }, 'error');
-        });
+            // Check if it's a resource load error (e.g., 404)
+            if (event.target && (event.target.tagName === 'SCRIPT' || event.target.tagName === 'LINK' || event.target.tagName === 'IMG')) {
+                const url = event.target.src || event.target.href || 'unknown';
+                debugTools.addBrowserConsoleLog(`Failed to load resource: ${url}`, 'error');
+                debugTools.addLog('network', `Failed to load: ${url.substring(0, 60)}...`, null, 'error');
+            } else if (event.message) {
+                debugTools.addLog('console', `Error: ${event.message}`, {
+                    file: event.filename?.split('/').pop(),
+                    line: event.lineno
+                }, 'error');
+                debugTools.addBrowserConsoleLog(`${event.message} (${event.filename?.split('/').pop()}:${event.lineno})`, 'error');
+            }
+        }, true); // Use capture phase to catch resource errors
 
         window.addEventListener('unhandledrejection', function(event) {
             debugTools.addLog('console', `Promise rejected: ${event.reason}`, null, 'error');
+            debugTools.addBrowserConsoleLog(`Unhandled Promise rejection: ${event.reason}`, 'error');
         });
+
+        // Monitor for network errors on dynamically loaded resources
+        const originalFetch = window.fetch;
+        window.fetch = function(...args) {
+            return originalFetch.apply(this, args).then(response => {
+                if (!response.ok) {
+                    debugTools.addBrowserConsoleLog(`Fetch failed: ${response.status} ${response.url}`, 'error');
+                }
+                return response;
+            }).catch(err => {
+                debugTools.addBrowserConsoleLog(`Fetch error: ${err.message}`, 'error');
+                throw err;
+            });
+        };
+
+        // Monitor dynamically added scripts for load errors (catches JSONP 404s)
+        const scriptObserver = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                mutation.addedNodes.forEach(function(node) {
+                    if (node.tagName === 'SCRIPT' && node.src) {
+                        node.addEventListener('error', function() {
+                            const url = node.src;
+                            if (url.includes('chat-widget.imi.chat') || url.includes('imi.chat')) {
+                                debugTools.addBrowserConsoleLog(`IMI request failed (404): ${url.substring(0, 80)}...`, 'error');
+                                debugTools.addLog('network', `IMI 404: Domain not whitelisted?`, { url: url.substring(0, 100) }, 'error');
+                                debugTools.updateStatus('Domain Not Whitelisted', '#dc3545');
+                            } else {
+                                debugTools.addBrowserConsoleLog(`Script load failed: ${url}`, 'error');
+                            }
+                        });
+                    }
+                });
+            });
+        });
+        scriptObserver.observe(document.body, { childList: true, subtree: true });
 
         // Initialize
         debugTools.addLog('events', 'Dashboard ready', { session: sessionUUID }, 'success');
