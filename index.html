@@ -2411,11 +2411,26 @@ document.getElementById('openChat').onclick = function() {
 
             reloadWidget: function() {
                 this.addLog('events', 'Reloading widget...', null, 'info');
+
+                // Remove existing IMI script
                 const existingScript = document.querySelector('script[src*="imichatinit.js"]');
                 if (existingScript) existingScript.remove();
 
-                const widgetElements = document.querySelectorAll('[id*="icw"], [class*="icw"], iframe[src*="imi"]');
+                // Remove all widget-related elements (iframes, icw elements)
+                const widgetElements = document.querySelectorAll('[id*="icw"], [class*="icw"], iframe[src*="imi"], #imi-chatbutton, #imichat-fullscreen-modal');
                 widgetElements.forEach(el => el.remove());
+
+                // Recreate the divicw container if it was removed
+                if (!document.getElementById('divicw')) {
+                    const config = getWidgetConfig();
+                    const newDiv = document.createElement('div');
+                    newDiv.id = 'divicw';
+                    newDiv.setAttribute('data-bind', config.bind || '');
+                    newDiv.setAttribute('data-org', '');
+                    newDiv.setAttribute('data-guid', config.guid || '');
+                    document.body.appendChild(newDiv);
+                    this.addLog('events', 'Recreated widget container', null, 'info');
+                }
 
                 this.widgetConfig = null;
                 document.getElementById('widgetConfigContent').innerHTML = '<div class="config-item"><span class="config-label">Status</span><span class="config-value warning">Reloading...</span></div>';
