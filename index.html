@@ -1513,7 +1513,7 @@ document.getElementById('openChat').onclick = function() {
                 <span class="badge debug-badge">Debug Mode</span>
                 <h1>WidgetScope</h1>
                 <p class="subtitle">Webex Connect Debug Dashboard</p>
-                <button class="control-btn secondary" onclick="showSetupModal()" style="margin-bottom: 10px; font-size: 0.7rem;">
+                <button class="control-btn" onclick="showSetupModal()" style="margin-bottom: 10px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
                     <span>&#9881;</span> Configure Widget
                 </button>
 
@@ -1703,6 +1703,16 @@ document.getElementById('openChat').onclick = function() {
     <!-- Toast Notification -->
     <div class="toast" id="toast">Copied to clipboard!</div>
 
+    <!-- Setup Required Banner (shown when no credentials) -->
+    <div id="setupBanner" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: linear-gradient(135deg, #1e1e34 0%, #2d2d4a 100%); padding: 40px; border-radius: 16px; text-align: center; z-index: 1000; box-shadow: 0 20px 60px rgba(0,0,0,0.5); max-width: 400px;">
+        <div style="font-size: 3rem; margin-bottom: 16px;">&#9881;</div>
+        <h2 style="color: #fff; margin-bottom: 12px;">Setup Required</h2>
+        <p style="color: #888; margin-bottom: 24px; font-size: 0.9rem;">Configure your Webex Connect widget credentials to get started.</p>
+        <button onclick="showSetupModal()" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 14px 32px; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(102,126,234,0.4)';" onmouseout="this.style.transform='none'; this.style.boxShadow='none';">
+            <span>&#9881;</span> Configure Widget
+        </button>
+    </div>
+
     <!-- Webex Connect Chatbot Widget -->
     <div id="divicw" data-bind="" data-org="" data-guid=""></div>
 
@@ -1857,6 +1867,7 @@ document.getElementById('openChat').onclick = function() {
 
             localStorage.setItem('widgetScopeConfig', JSON.stringify(config));
             applyConfig(config);
+            hideSetupBanner();
             closeSetupModal();
             showToast('Configuration saved! Reloading widget...');
 
@@ -1880,15 +1891,27 @@ document.getElementById('openChat').onclick = function() {
             }
         }
 
+        // Show/hide setup banner
+        function showSetupBanner() {
+            document.getElementById('setupBanner').style.display = 'block';
+        }
+
+        function hideSetupBanner() {
+            document.getElementById('setupBanner').style.display = 'none';
+        }
+
         // Initialize config on page load
         (function initConfig() {
             const config = getWidgetConfig();
 
-            // If no config and no URL params, show setup modal
+            // If no config and no URL params, show setup banner and modal
             if (!config.guid || !config.bind) {
-                // Show setup modal after a brief delay
+                // Show setup banner (persists if modal is closed)
+                showSetupBanner();
+                // Also show setup modal after a brief delay
                 setTimeout(() => showSetupModal(), 500);
             } else {
+                hideSetupBanner();
                 applyConfig(config);
             }
         })();
