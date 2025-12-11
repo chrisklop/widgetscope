@@ -6014,8 +6014,9 @@ document.getElementById('openChat').onclick = function() {
             }
         };
 
-        // Initialize Safari debug tools
-        setTimeout(function() { safariDebug.init(); }, 100);
+        // Initialize Safari debug tools FIRST (before widget loads)
+        // This must happen before initWidget() so we can intercept WebSocket connections
+        safariDebug.init();
 
         // Initialize
         debugTools.addLog('events', 'Dashboard ready', { session: sessionUUID }, 'success');
