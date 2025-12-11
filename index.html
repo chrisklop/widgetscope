@@ -1756,8 +1756,10 @@ document.getElementById('openChat').onclick = function() {
 
             <div class="setup-help" style="margin-top: 20px; padding-top: 16px; border-top: 1px solid #2d2d4a;">
                 <div style="background: #2d1f1f; border: 1px solid #dc3545; border-radius: 8px; padding: 12px; margin-bottom: 12px;">
-                    <p style="color: #dc3545; font-size: 0.75rem; font-weight: 600; margin-bottom: 4px;">&#9888; Domain Whitelist Required</p>
-                    <p style="color: #ccc; font-size: 0.7rem; margin: 0;">Add <code style="background: #1a1a2e; padding: 2px 6px; border-radius: 4px;">widgetscope.vercel.app</code> to your LiveChat asset's Websites tab in Webex Engage, or the widget won't load.</p>
+                    <p style="color: #dc3545; font-size: 0.75rem; font-weight: 600; margin-bottom: 6px;">&#9888; Two Configuration Steps Required</p>
+                    <p style="color: #ccc; font-size: 0.7rem; margin-bottom: 8px;"><strong>1. Webex Engage:</strong> Add <code style="background: #1a1a2e; padding: 2px 6px; border-radius: 4px;">widgetscope.vercel.app</code> to your LiveChat asset's <strong>Websites</strong> tab.</p>
+                    <p style="color: #ccc; font-size: 0.7rem; margin: 0;"><strong>2. Webex Connect Flow:</strong> Add the domain to your flow's Custom Variables:<br>
+                    <span style="color: #888; font-size: 0.65rem;">Services &rarr; [Your Service] &rarr; Flows &rarr; [Your Flow] &rarr; Edit &rarr; Settings (top right, no node selected) &rarr; Custom Variables &rarr; <code style="background: #1a1a2e; padding: 2px 4px; border-radius: 4px;">liveChatDomain</code></span></p>
                 </div>
                 <p style="color: #888; font-size: 0.75rem; margin-bottom: 8px;">Need help finding your credentials?</p>
                 <a href="https://webexcc.github.io/pages/Digital/" target="_blank" style="color: #667eea; font-size: 0.75rem;">View setup guide &rarr;</a>

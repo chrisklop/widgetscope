@@ -6,14 +6,23 @@ A simple, single-file debug dashboard for testing Webex Connect (IMI Chat) chatb
 
 ### Step 1: Whitelist the Domain
 
-**Important:** The widget won't load unless you whitelist the domain in Webex Engage.
+**Important:** The widget won't load unless you configure the domain in two places:
 
+#### A. Webex Engage (LiveChat Asset)
 1. Log in to **Webex Engage Admin Console**
 2. Go to **Assets** → **Channel Assets** → **LiveChat**
 3. Click **Edit** on your LiveChat asset
 4. Go to the **Websites** tab
 5. Add: `widgetscope.vercel.app` (no https://)
 6. Save
+
+#### B. Webex Connect Flow (Custom Variables)
+1. Go to **Webex Connect** → **Services** → click your service name
+2. Click **Flows** → click your flow name
+3. Click **Edit** (top right)
+4. Click **Settings** button (top right) — make sure no node is selected!
+5. Go to **Custom Variables**
+6. Set `liveChatDomain` to include your domain
 
 ### Step 2: Get Your Widget Credentials
 
