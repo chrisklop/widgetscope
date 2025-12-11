@@ -6,41 +6,30 @@ A simple, single-file debug dashboard for testing Webex Connect (IMI Chat) chatb
 
 ### Step 1: Get Your Widget Credentials
 
-You need two values from Webex Engage:
+You need the installation snippet from Webex Engage:
 
 1. Log in to **Webex Engage Admin Console**
-2. Go to **Assets** → **LiveChat**
-3. Click on your LiveChat asset (or create one)
+2. Go to **Assets** → **Channel Assets** → **LiveChat**
+3. Click **Edit** on your LiveChat asset (or create one)
 4. Go to the **Installation** tab
-5. Find the code snippet - it looks like this:
-
-```html
-<div id="divicw"
-     data-bind="XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"  <!-- This is your BIND ID -->
-     data-guid="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"> <!-- This is your GUID -->
-</div>
-<script src="https://media.imi.chat/widget/js/imichatinit.js"></script>
-```
-
-Copy these two values:
-- **GUID** = the `data-guid` value
-- **Bind ID** = the `data-bind` value
+5. Copy the entire installation code snippet
 
 ### Step 2: Open WidgetScope
 
-**Option A: Use the hosted version**
-```
-https://widgetscope.vercel.app?guid=YOUR-GUID&bind=YOUR-BIND-ID
-```
+1. Go to [widgetscope.vercel.app](https://widgetscope.vercel.app)
+2. **Paste the entire installation snippet** into the "Quick Setup" box
+3. Click "Save & Load Widget"
 
-**Option B: Run locally**
-1. Download `index.html`
-2. Open it in your browser
-3. Enter your credentials in the setup modal
+That's it! WidgetScope automatically extracts the GUID and Bind ID from your snippet.
+
+**Alternative options:**
+- Pass credentials via URL: `https://widgetscope.vercel.app?guid=YOUR-GUID&bind=YOUR-BIND-ID`
+- Download `index.html` and run locally
+- Enter GUID and Bind ID manually if you prefer
 
 ### Step 3: Start Debugging
 
-That's it! The widget should appear on the right side of the screen. Use the dashboard panels to:
+The widget should appear on the right side of the screen. Use the dashboard panels to:
 - Watch PostMessages for widget communication
 - Monitor network requests
 - Check console output

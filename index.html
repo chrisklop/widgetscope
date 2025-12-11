@@ -1710,18 +1710,27 @@ document.getElementById('openChat').onclick = function() {
     <div class="setup-modal" id="setupModal">
         <div class="setup-content">
             <h2>Configure WidgetScope</h2>
-            <p>Enter your Webex Connect widget credentials to get started.</p>
+            <p>Paste your installation snippet or enter credentials manually.</p>
+
+            <!-- Quick Paste Option -->
+            <div class="setup-field" style="margin-bottom: 24px;">
+                <label style="color: #28a745;">Quick Setup - Paste Installation Snippet</label>
+                <textarea id="setupSnippet" rows="3" placeholder="Paste the entire installation code from Webex Engage here..." style="width: 100%; padding: 12px; border: 2px solid #2d2d4a; border-radius: 8px; background: #12121f; color: #fff; font-size: 0.75rem; font-family: 'Monaco', 'Menlo', monospace; resize: vertical;"></textarea>
+                <small>Copy from: Webex Engage &rarr; Assets &rarr; Channel Assets &rarr; LiveChat &rarr; Edit &rarr; Installation</small>
+            </div>
+
+            <div style="text-align: center; color: #555; font-size: 0.75rem; margin: 16px 0;">— OR enter manually —</div>
 
             <div class="setup-field">
                 <label>Widget GUID</label>
                 <input type="text" id="setupGuid" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx">
-                <small>Found in Webex Engage &rarr; Assets &rarr; LiveChat &rarr; Installation (data-guid)</small>
+                <small>The data-guid value from the installation snippet</small>
             </div>
 
             <div class="setup-field">
                 <label>Bind ID</label>
                 <input type="text" id="setupBind" placeholder="XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX">
-                <small>Found in the same place (data-bind)</small>
+                <small>The data-bind value from the installation snippet</small>
             </div>
 
             <div class="setup-field">
@@ -1759,13 +1768,65 @@ document.getElementById('openChat').onclick = function() {
             };
         }
 
+        // Parse installation snippet to extract GUID and Bind ID
+        function parseInstallationSnippet(snippet) {
+            const result = { guid: '', bind: '' };
+
+            // Look for data-guid="..."
+            const guidMatch = snippet.match(/data-guid=["']([^"']+)["']/i);
+            if (guidMatch) {
+                result.guid = guidMatch[1];
+            }
+
+            // Look for data-bind="..."
+            const bindMatch = snippet.match(/data-bind=["']([^"']+)["']/i);
+            if (bindMatch) {
+                result.bind = bindMatch[1];
+            }
+
+            return result;
+        }
+
         // Show setup modal
         function showSetupModal() {
             const config = getWidgetConfig();
             document.getElementById('setupGuid').value = config.guid;
             document.getElementById('setupBind').value = config.bind;
             document.getElementById('setupOrg').value = config.org === 'Your Organization' ? '' : config.org;
+            document.getElementById('setupSnippet').value = '';
             document.getElementById('setupModal').classList.add('show');
+
+            // Add paste listener to snippet textarea
+            const snippetField = document.getElementById('setupSnippet');
+            snippetField.onpaste = function(e) {
+                setTimeout(() => {
+                    const parsed = parseInstallationSnippet(snippetField.value);
+                    if (parsed.guid) {
+                        document.getElementById('setupGuid').value = parsed.guid;
+                    }
+                    if (parsed.bind) {
+                        document.getElementById('setupBind').value = parsed.bind;
+                    }
+                    if (parsed.guid && parsed.bind) {
+                        snippetField.style.borderColor = '#28a745';
+                        snippetField.placeholder = 'Credentials extracted successfully!';
+                    }
+                }, 50);
+            };
+
+            // Also handle manual typing/changes
+            snippetField.oninput = function() {
+                const parsed = parseInstallationSnippet(snippetField.value);
+                if (parsed.guid) {
+                    document.getElementById('setupGuid').value = parsed.guid;
+                }
+                if (parsed.bind) {
+                    document.getElementById('setupBind').value = parsed.bind;
+                }
+                if (parsed.guid && parsed.bind) {
+                    snippetField.style.borderColor = '#28a745';
+                }
+            };
         }
 
         // Close setup modal
@@ -1775,6 +1836,14 @@ document.getElementById('openChat').onclick = function() {
 
         // Save config to localStorage and reload
         function saveConfig() {
+            // First check if there's a snippet to parse
+            const snippet = document.getElementById('setupSnippet').value;
+            if (snippet) {
+                const parsed = parseInstallationSnippet(snippet);
+                if (parsed.guid) document.getElementById('setupGuid').value = parsed.guid;
+                if (parsed.bind) document.getElementById('setupBind').value = parsed.bind;
+            }
+
             const config = {
                 guid: document.getElementById('setupGuid').value.trim(),
                 bind: document.getElementById('setupBind').value.trim(),
@@ -1782,7 +1851,7 @@ document.getElementById('openChat').onclick = function() {
             };
 
             if (!config.guid || !config.bind) {
-                alert('Please enter both GUID and Bind ID');
+                alert('Please enter both GUID and Bind ID, or paste your installation snippet');
                 return;
             }
 
