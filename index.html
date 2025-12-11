@@ -4071,6 +4071,7 @@ document.getElementById('openChat').onclick = function() {
 
             // Initialize all Safari debug features
             init: function() {
+                console.log('[WidgetScope] safariDebug.init() called');
                 this.interceptWebSocket();
                 this.initVisibilityTracking();
                 this.initNetworkTracking();
@@ -4127,7 +4128,11 @@ document.getElementById('openChat').onclick = function() {
                 const self = this;
                 const OriginalWebSocket = window.WebSocket;
 
+                console.log('[WidgetScope] WebSocket interception installed');
+                debugTools.addLog('events', 'WebSocket interception installed', null, 'success');
+
                 window.WebSocket = function(url, protocols) {
+                    console.log('[WidgetScope] WebSocket created:', url);
                     const wsId = ++self.wsIdCounter;
                     const ws = protocols ? new OriginalWebSocket(url, protocols) : new OriginalWebSocket(url);
 
