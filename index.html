@@ -22,12 +22,13 @@
 
         .main-layout {
             display: grid;
-            grid-template-columns: 240px 1fr 1fr 1fr;
-            grid-template-rows: calc(50vh - 25px) calc(50vh - 25px);
+            grid-template-columns: 220px 1fr 1fr 1fr;
+            grid-template-rows: calc(50vh - 40px) calc(50vh - 40px);
             gap: 12px;
-            height: calc(100vh - 30px);
+            height: calc(100vh - 75px);
             overflow: hidden;
             margin-right: 25%;  /* Reserve right quarter for chatbot widget */
+            margin-top: 60px;  /* Space for nav bar */
         }
 
         /* Boolean value highlighting */
@@ -40,100 +41,143 @@
             font-weight: 600;
         }
 
-        /* Help Button - Top Right */
+        /* Help Button - In Nav */
         .help-btn {
-            position: fixed;
-            top: 15px;
-            right: calc(25% + 15px);
             background: #1a1a1a;
             color: #00d4aa;
             border: 1px solid #2a2a2a;
-            padding: 10px 16px;
-            border-radius: 6px;
+            padding: 6px 12px;
+            border-radius: 5px;
             cursor: pointer;
-            font-size: 0.8rem;
+            font-size: 0.7rem;
             font-weight: 600;
             display: flex;
             align-items: center;
-            gap: 6px;
-            z-index: 1000;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            gap: 5px;
             transition: all 0.2s ease;
         }
         .help-btn:hover {
             background: #252525;
             border-color: #00d4aa;
-            box-shadow: 0 4px 12px rgba(0, 212, 170, 0.15);
         }
 
-        /* Status Orb - Animated Status Indicator */
-        .status-orb-container {
+        /* Top Navigation Bar */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 25%;
+            height: 45px;
             background: #141414;
-            border-radius: 10px;
-            padding: 20px;
-            border: 1px solid #1f1f1f;
+            border-bottom: 1px solid #1f1f1f;
             display: flex;
-            flex-direction: column;
             align-items: center;
-            justify-content: center;
-            gap: 12px;
-            margin-bottom: 0;
+            justify-content: space-between;
+            padding: 0 15px;
+            z-index: 999;
         }
-        .status-orb {
-            width: 100px;
-            height: 100px;
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .nav-brand h1 {
+            color: #fff;
+            font-size: 0.95rem;
+            margin: 0;
+        }
+        .nav-brand .badge {
+            margin: 0;
+        }
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .nav-btn {
+            background: #1a1a1a;
+            border: 1px solid #252525;
+            color: #888;
+            padding: 6px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.2s;
+        }
+        .nav-btn:hover {
+            background: #252525;
+            color: #fff;
+            border-color: #333;
+        }
+        .nav-btn.primary {
+            background: #00d4aa;
+            color: #0d0d0d;
+            border-color: #00d4aa;
+        }
+        .nav-btn.primary:hover {
+            background: #00b894;
+        }
+        .nav-btn.danger {
+            color: #ef4444;
+        }
+        .nav-btn.danger:hover {
+            background: #1c1414;
+            border-color: #ef4444;
+        }
+        .nav-divider {
+            width: 1px;
+            height: 24px;
+            background: #252525;
+            margin: 0 6px;
+        }
+
+        /* Mini Status Orb in Nav Bar */
+        .nav-status-orb {
+            width: 28px;
+            height: 28px;
             position: relative;
             cursor: pointer;
+            margin-left: 12px;
         }
-        .status-orb-core {
+        .nav-orb-core {
             position: absolute;
             top: 50%;
             left: 50%;
-            width: 36px;
-            height: 36px;
+            width: 12px;
+            height: 12px;
             transform: translate(-50%, -50%);
             border-radius: 50%;
             background: #00d4aa;
-            box-shadow: 0 0 30px rgba(0, 212, 170, 0.6);
+            box-shadow: 0 0 12px rgba(0, 212, 170, 0.6);
             transition: background 0.5s ease, box-shadow 0.5s ease;
         }
-        .status-orb-core.warning {
+        .nav-orb-core.warning {
             background: #f59e0b;
-            box-shadow: 0 0 30px rgba(245, 158, 11, 0.6);
+            box-shadow: 0 0 12px rgba(245, 158, 11, 0.6);
         }
-        .status-orb-core.error {
+        .nav-orb-core.error {
             background: #ef4444;
-            box-shadow: 0 0 30px rgba(239, 68, 68, 0.6);
+            box-shadow: 0 0 12px rgba(239, 68, 68, 0.6);
         }
-        .status-orb-ring {
+        .nav-orb-ring {
             position: absolute;
             top: 50%;
             left: 50%;
+            width: 22px;
+            height: 22px;
             transform: translate(-50%, -50%);
             border-radius: 50%;
             border: 2px solid rgba(0, 212, 170, 0.4);
             animation: orb-pulse 2s ease-in-out infinite;
         }
-        .status-orb-ring.warning {
+        .nav-orb-ring.warning {
             border-color: rgba(245, 158, 11, 0.4);
         }
-        .status-orb-ring.error {
+        .nav-orb-ring.error {
             border-color: rgba(239, 68, 68, 0.4);
-        }
-        .status-orb-ring:nth-child(2) {
-            width: 52px;
-            height: 52px;
-            animation-delay: 0s;
-        }
-        .status-orb-ring:nth-child(3) {
-            width: 68px;
-            height: 68px;
-            animation-delay: 0.3s;
-        }
-        .status-orb-ring:nth-child(4) {
-            width: 86px;
-            height: 86px;
-            animation-delay: 0.6s;
         }
         @keyframes orb-pulse {
             0%, 100% {
@@ -145,79 +189,16 @@
                 transform: translate(-50%, -50%) scale(1.1);
             }
         }
-        /* Floating particles around the orb */
-        .status-orb-particle {
-            position: absolute;
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: #00d4aa;
-            opacity: 0.6;
-        }
-        .status-orb-particle.warning {
-            background: #f59e0b;
-        }
-        .status-orb-particle.error {
-            background: #ef4444;
-        }
-        .status-orb-particle:nth-child(5) {
-            top: 8px;
-            left: 47px;
-            animation: float-particle 3s ease-in-out infinite;
-        }
-        .status-orb-particle:nth-child(6) {
-            top: 47px;
-            left: 88px;
-            animation: float-particle 3s ease-in-out infinite 0.5s;
-        }
-        .status-orb-particle:nth-child(7) {
-            top: 85px;
-            left: 40px;
-            animation: float-particle 3s ease-in-out infinite 1s;
-        }
-        .status-orb-particle:nth-child(8) {
-            top: 30px;
-            left: 8px;
-            animation: float-particle 3s ease-in-out infinite 1.5s;
-        }
-        .status-orb-particle:nth-child(9) {
-            top: 70px;
-            left: 75px;
-            animation: float-particle 3s ease-in-out infinite 2s;
-        }
-        @keyframes float-particle {
-            0%, 100% {
-                transform: translate(0, 0);
-                opacity: 0.4;
-            }
-            25% {
-                transform: translate(5px, -5px);
-                opacity: 0.8;
-            }
-            50% {
-                transform: translate(-3px, 3px);
-                opacity: 0.5;
-            }
-            75% {
-                transform: translate(3px, 5px);
-                opacity: 0.7;
-            }
-        }
-        .status-orb-label {
-            font-size: 0.85rem;
-            color: #666;
-            white-space: nowrap;
-            text-align: center;
-        }
-        .status-orb-label span {
+        .nav-status-text {
+            font-size: 0.7rem;
             color: #00d4aa;
             font-weight: 600;
-            font-size: 1rem;
+            margin-left: 6px;
         }
-        .status-orb-label span.warning {
+        .nav-status-text.warning {
             color: #f59e0b;
         }
-        .status-orb-label span.error {
+        .nav-status-text.error {
             color: #ef4444;
         }
 
@@ -1179,19 +1160,25 @@
         /* Responsive */
         @media (max-width: 1400px) {
             .main-layout {
-                grid-template-columns: 220px 1fr 1fr 1fr;
+                grid-template-columns: 200px 1fr 1fr 1fr;
                 margin-right: 22%;
+            }
+            .nav-btn span:first-child {
+                display: none;
             }
         }
 
         @media (max-width: 1200px) {
             .main-layout {
-                grid-template-columns: 200px 1fr 1fr;
+                grid-template-columns: 180px 1fr 1fr;
                 grid-template-rows: auto auto auto auto;
                 margin-right: 20%;
             }
             .sidebar {
                 grid-row: 1 / 3;
+            }
+            .top-nav {
+                right: 20%;
             }
         }
 
@@ -1199,15 +1186,59 @@
             .main-layout {
                 grid-template-columns: 1fr;
                 margin-right: 0;
+                margin-top: 50px;
+            }
+            .top-nav {
+                right: 0;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Help Button -->
-    <button class="help-btn" onclick="helpPanel.toggle()">
-        <span>&#128218;</span> Documentation
-    </button>
+    <!-- Top Navigation Bar -->
+    <nav class="top-nav">
+        <div class="nav-brand">
+            <h1>WidgetScope</h1>
+            <span class="badge" id="orgBadgeNav">Debug Mode</span>
+            <!-- Mini Status Orb in Nav -->
+            <div class="nav-status-orb" id="navStatusOrb" onclick="statusOrb.showDetails()" title="System Status">
+                <div class="nav-orb-core" id="statusOrbCore"></div>
+                <div class="nav-orb-ring" id="statusOrbRing1"></div>
+            </div>
+            <span class="nav-status-text" id="statusOrbText">Initializing</span>
+        </div>
+        <div class="nav-actions">
+            <button class="nav-btn" onclick="debugTools.inspectWidget()">
+                <span>&#128269;</span> Inspect
+            </button>
+            <button class="nav-btn" onclick="debugTools.checkConnectivity()">
+                <span>&#128225;</span> Ping
+            </button>
+            <button class="nav-btn primary" onclick="debugTools.copyFullReport()">
+                <span>&#128203;</span> Full Report
+            </button>
+            <button class="nav-btn" onclick="debugTools.copyWidgetConfig()">
+                <span>&#9881;</span> Config
+            </button>
+            <div class="nav-divider"></div>
+            <button class="nav-btn" onclick="debugTools.reloadWidget()">
+                <span>&#8635;</span> Reload
+            </button>
+            <button class="nav-btn danger" onclick="debugTools.clearAllLogs()">
+                <span>&#128465;</span> Clear
+            </button>
+            <button class="nav-btn" onclick="debugTools.exportLogs()">
+                <span>&#128190;</span> Export
+            </button>
+            <div class="nav-divider"></div>
+            <button class="nav-btn" onclick="showSetupModal()">
+                <span>&#9881;</span> Configure
+            </button>
+            <button class="help-btn" onclick="helpPanel.toggle()">
+                <span>&#128218;</span> Docs
+            </button>
+        </div>
+    </nav>
 
     <!-- Help Panel Overlay -->
     <div class="help-overlay" id="helpOverlay" onclick="helpPanel.close()"></div>
@@ -1726,12 +1757,6 @@ document.getElementById('openChat').onclick = function() {
         <div class="sidebar">
             <div class="container">
                 <span class="badge" id="orgBadge">Your Organization</span>
-                <span class="badge debug-badge">Debug Mode</span>
-                <h1>WidgetScope</h1>
-                <p class="subtitle">Webex Connect Debug Dashboard</p>
-                <button class="control-btn" onclick="showSetupModal()" style="margin-bottom: 10px;">
-                    <span>&#9881;</span> Configure Widget
-                </button>
 
                 <div class="status-card">
                     <div class="status-indicator">
@@ -1756,16 +1781,6 @@ document.getElementById('openChat').onclick = function() {
                     <div class="state-item">
                         <div class="state-label">Widget Msgs</div>
                         <div class="state-value" id="messageCount">0</div>
-                    </div>
-                </div>
-
-                <div class="controls" style="margin-top: 12px;">
-                    <button class="control-btn" onclick="debugTools.reloadWidget()">
-                        <span>&#8635;</span> Reload Widget
-                    </button>
-                    <div class="btn-row">
-                        <button class="control-btn secondary" onclick="debugTools.clearAllLogs()">Clear</button>
-                        <button class="control-btn secondary" onclick="debugTools.exportLogs()">Export</button>
                     </div>
                 </div>
             </div>
@@ -1848,47 +1863,6 @@ document.getElementById('openChat').onclick = function() {
                 </div>
             </div>
             <div class="panel-content" id="postMessageLogs"></div>
-        </div>
-
-        <!-- Status Orb - Animated Status Indicator -->
-        <div class="status-orb-container" id="statusOrbContainer" title="System Status">
-            <div class="status-orb" id="statusOrb" onclick="statusOrb.showDetails()">
-                <div class="status-orb-core" id="statusOrbCore"></div>
-                <div class="status-orb-ring" id="statusOrbRing1"></div>
-                <div class="status-orb-ring" id="statusOrbRing2"></div>
-                <div class="status-orb-ring" id="statusOrbRing3"></div>
-                <div class="status-orb-particle" id="statusOrbParticle1"></div>
-                <div class="status-orb-particle" id="statusOrbParticle2"></div>
-                <div class="status-orb-particle" id="statusOrbParticle3"></div>
-                <div class="status-orb-particle" id="statusOrbParticle4"></div>
-                <div class="status-orb-particle" id="statusOrbParticle5"></div>
-            </div>
-            <div class="status-orb-label">
-                <span id="statusOrbText">Initializing</span>
-            </div>
-        </div>
-
-        <!-- Column 4 - Quick Actions (top) -->
-        <div class="quick-actions" style="height: fit-content;">
-            <h3><span>&#9889;</span> Quick Actions</h3>
-            <div class="action-grid">
-                <button class="action-btn" onclick="debugTools.inspectWidget()">
-                    <span class="icon">&#128269;</span>
-                    Inspect
-                </button>
-                <button class="action-btn" onclick="debugTools.checkConnectivity()">
-                    <span class="icon">&#128225;</span>
-                    Ping
-                </button>
-                <button class="action-btn" onclick="debugTools.copyFullReport()">
-                    <span class="icon">&#128203;</span>
-                    Full Report
-                </button>
-                <button class="action-btn" onclick="debugTools.copyWidgetConfig()">
-                    <span class="icon">&#9881;</span>
-                    Copy Config
-                </button>
-            </div>
         </div>
 
         <!-- Column 2 - Network (bottom) -->
@@ -2229,30 +2203,19 @@ document.getElementById('openChat').onclick = function() {
             setState: function(state) {
                 this.currentState = state;
                 const core = document.getElementById('statusOrbCore');
-                const rings = [
-                    document.getElementById('statusOrbRing1'),
-                    document.getElementById('statusOrbRing2'),
-                    document.getElementById('statusOrbRing3')
-                ];
-                const particles = [
-                    document.getElementById('statusOrbParticle1'),
-                    document.getElementById('statusOrbParticle2'),
-                    document.getElementById('statusOrbParticle3'),
-                    document.getElementById('statusOrbParticle4'),
-                    document.getElementById('statusOrbParticle5')
-                ];
+                const ring = document.getElementById('statusOrbRing1');
                 const label = document.getElementById('statusOrbText');
 
                 // Remove all state classes
                 const stateClasses = ['warning', 'error'];
-                [core, ...rings, ...particles].forEach(el => {
+                [core, ring].forEach(el => {
                     if (el) stateClasses.forEach(cls => el.classList.remove(cls));
                 });
                 if (label) stateClasses.forEach(cls => label.classList.remove(cls));
 
                 // Apply new state
                 if (state === 'error') {
-                    [core, ...rings, ...particles].forEach(el => {
+                    [core, ring].forEach(el => {
                         if (el) el.classList.add('error');
                     });
                     if (label) {
@@ -2260,7 +2223,7 @@ document.getElementById('openChat').onclick = function() {
                         label.textContent = 'Error';
                     }
                 } else if (state === 'warning') {
-                    [core, ...rings, ...particles].forEach(el => {
+                    [core, ring].forEach(el => {
                         if (el) el.classList.add('warning');
                     });
                     if (label) {
