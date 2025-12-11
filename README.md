@@ -4,17 +4,25 @@ A simple, single-file debug dashboard for testing Webex Connect (IMI Chat) chatb
 
 ## 5-Minute Setup
 
-### Step 1: Get Your Widget Credentials
+### Step 1: Whitelist the Domain
 
-You need the installation snippet from Webex Engage:
+**Important:** The widget won't load unless you whitelist the domain in Webex Engage.
 
 1. Log in to **Webex Engage Admin Console**
 2. Go to **Assets** → **Channel Assets** → **LiveChat**
-3. Click **Edit** on your LiveChat asset (or create one)
-4. Go to the **Installation** tab
-5. Copy the entire installation code snippet
+3. Click **Edit** on your LiveChat asset
+4. Go to the **Websites** tab
+5. Add: `widgetscope.vercel.app` (no https://)
+6. Save
 
-### Step 2: Open WidgetScope
+### Step 2: Get Your Widget Credentials
+
+While you're in the LiveChat asset settings:
+
+1. Go to the **Installation** tab
+2. Copy the entire installation code snippet
+
+### Step 3: Open WidgetScope
 
 1. Go to [widgetscope.vercel.app](https://widgetscope.vercel.app)
 2. **Paste the entire installation snippet** into the "Quick Setup" box
@@ -27,7 +35,7 @@ That's it! WidgetScope automatically extracts the GUID and Bind ID from your sni
 - Download `index.html` and run locally
 - Enter GUID and Bind ID manually if you prefer
 
-### Step 3: Start Debugging
+### Step 4: Start Debugging
 
 The widget should appear on the right side of the screen. Use the dashboard panels to:
 - Watch PostMessages for widget communication
