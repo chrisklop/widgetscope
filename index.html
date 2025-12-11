@@ -1028,6 +1028,8 @@
             display: none;
             align-items: center;
             justify-content: center;
+            overflow-y: auto;
+            padding: 20px;
         }
         .setup-modal.show {
             display: flex;
@@ -1035,60 +1037,95 @@
         .setup-content {
             background: #141414;
             border-radius: 16px;
-            padding: 30px;
-            max-width: 480px;
-            width: 90%;
+            padding: 24px;
+            max-width: 800px;
+            width: 95%;
             box-shadow: 0 20px 60px rgba(0,0,0,0.5);
             border: 1px solid #252525;
+            max-height: 95vh;
+            overflow-y: auto;
+        }
+        .setup-header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #252525;
         }
         .setup-content h2 {
             color: #fff;
-            margin-bottom: 8px;
-            font-size: 1.4rem;
+            margin-bottom: 4px;
+            font-size: 1.3rem;
         }
-        .setup-content > p {
+        .setup-content > p, .setup-header p {
             color: #888;
-            font-size: 0.85rem;
-            margin-bottom: 24px;
+            font-size: 0.8rem;
+            margin: 0;
+        }
+        .setup-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .setup-column {
+            display: flex;
+            flex-direction: column;
+        }
+        .setup-column-title {
+            color: #00d4aa;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #252525;
         }
         .setup-field {
-            margin-bottom: 20px;
+            margin-bottom: 14px;
         }
         .setup-field label {
             display: block;
-            color: #00d4aa;
-            font-size: 0.8rem;
+            color: #ccc;
+            font-size: 0.75rem;
             font-weight: 600;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
         }
-        .setup-field input {
+        .setup-field input, .setup-field textarea {
             width: 100%;
-            padding: 12px;
+            padding: 10px;
             border: 2px solid #252525;
-            border-radius: 8px;
+            border-radius: 6px;
             background: #0d0d0d;
             color: #fff;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-family: 'Monaco', 'Menlo', monospace;
             transition: border-color 0.2s;
         }
-        .setup-field input:focus {
+        .setup-field input:focus, .setup-field textarea:focus {
             outline: none;
             border-color: #00d4aa;
         }
-        .setup-field input::placeholder {
+        .setup-field input::placeholder, .setup-field textarea::placeholder {
             color: #555;
         }
         .setup-field small {
             display: block;
             color: #666;
-            font-size: 0.7rem;
-            margin-top: 4px;
+            font-size: 0.65rem;
+            margin-top: 3px;
+        }
+        .setup-footer {
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid #252525;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            align-items: start;
         }
         .setup-actions {
             display: flex;
-            gap: 12px;
-            margin-top: 24px;
+            gap: 10px;
         }
         .setup-btn {
             flex: 1;
@@ -1741,7 +1778,7 @@ document.getElementById('openChat').onclick = function() {
                     <label for="filterDevtools">Hide React DevTools noise</label>
                 </div>
                 <div class="filter-toggle" style="margin-top: 6px;">
-                    <input type="checkbox" id="filterDebugPanel" checked onchange="debugTools.toggleFilter('debugPanel')">
+                    <input type="checkbox" id="filterDebugPanel" onchange="debugTools.toggleFilter('debugPanel')">
                     <label for="filterDebugPanel">Hide debug_panel test msgs</label>
                 </div>
                 <div class="filter-toggle" style="margin-top: 6px;">
@@ -1916,57 +1953,71 @@ document.getElementById('openChat').onclick = function() {
     <!-- Setup Modal -->
     <div class="setup-modal" id="setupModal">
         <div class="setup-content">
-            <h2>Configure WidgetScope</h2>
-            <p>Paste your installation snippet or enter credentials manually.</p>
-
-            <!-- Quick Paste Option -->
-            <div class="setup-field" style="margin-bottom: 24px;">
-                <label style="color: #00d4aa;">Quick Setup - Paste Installation Snippet</label>
-                <textarea id="setupSnippet" rows="3" placeholder="Paste the entire installation code from Webex Engage here..." style="width: 100%; padding: 12px; border: 2px solid #252525; border-radius: 8px; background: #0d0d0d; color: #fff; font-size: 0.75rem; font-family: 'Monaco', 'Menlo', monospace; resize: vertical;"></textarea>
-                <small>Copy from: Webex Engage &rarr; Assets &rarr; Channel Assets &rarr; LiveChat &rarr; Edit &rarr; Installation</small>
+            <div class="setup-header">
+                <h2>Configure WidgetScope</h2>
+                <p>Enter your Webex Connect widget credentials</p>
             </div>
 
-            <div style="text-align: center; color: #555; font-size: 0.75rem; margin: 16px 0;">— OR enter manually —</div>
+            <div class="setup-grid">
+                <!-- Left Column - Credentials -->
+                <div class="setup-column">
+                    <div class="setup-column-title">Widget Credentials</div>
 
-            <div class="setup-field">
-                <label>Widget GUID</label>
-                <input type="text" id="setupGuid" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx">
-                <small>The data-guid value from the installation snippet</small>
-            </div>
+                    <div class="setup-field">
+                        <label>Quick Setup - Paste Installation Snippet</label>
+                        <textarea id="setupSnippet" rows="2" placeholder="Paste installation code from Webex Engage..."></textarea>
+                        <small>Webex Engage &rarr; Assets &rarr; Channel Assets &rarr; LiveChat &rarr; Edit &rarr; Installation</small>
+                    </div>
 
-            <div class="setup-field">
-                <label>Bind ID</label>
-                <input type="text" id="setupBind" placeholder="XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX">
-                <small>The data-bind value from the installation snippet</small>
-            </div>
+                    <div class="setup-field">
+                        <label>Widget GUID</label>
+                        <input type="text" id="setupGuid" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx">
+                        <small>The data-guid value</small>
+                    </div>
 
-            <div class="setup-field">
-                <label>Organization Name (optional)</label>
-                <input type="text" id="setupOrg" placeholder="e.g., Your Company Name">
-                <small>Displayed in the sidebar badge</small>
-            </div>
+                    <div class="setup-field">
+                        <label>Bind ID</label>
+                        <input type="text" id="setupBind" placeholder="XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX">
+                        <small>The data-bind value</small>
+                    </div>
 
-            <div class="setup-actions">
-                <button class="setup-btn secondary" onclick="closeSetupModal()">Cancel</button>
-                <button class="setup-btn primary" onclick="saveConfig()">Save & Load Widget</button>
-            </div>
-
-            <div class="setup-help" style="margin-top: 20px; padding-top: 16px; border-top: 1px solid #252525;">
-                <div style="background: #1c1414; border: 1px solid #ef4444; border-radius: 8px; padding: 12px; margin-bottom: 12px;">
-                    <p style="color: #ef4444; font-size: 0.75rem; font-weight: 600; margin-bottom: 6px;">&#9888; Two Configuration Steps Required</p>
-                    <p style="color: #ccc; font-size: 0.7rem; margin-bottom: 8px;"><strong>1. Webex Engage:</strong> Add <code style="background: #0d0d0d; padding: 2px 6px; border-radius: 4px;">widgetscope.vercel.app</code> to your LiveChat asset's <strong>Websites</strong> tab.</p>
-                    <p style="color: #ccc; font-size: 0.7rem; margin: 0;"><strong>2. Webex Connect Flow:</strong> Add the domain to your flow's Custom Variables:<br>
-                    <span style="color: #888; font-size: 0.65rem;">Services &rarr; [Your Service] &rarr; Flows &rarr; [Your Flow] &rarr; Edit &rarr; Settings (top right, no node selected) &rarr; Custom Variables &rarr; <code style="background: #0d0d0d; padding: 2px 4px; border-radius: 4px;">liveChatDomain</code></span></p>
+                    <div class="setup-field">
+                        <label>Organization Name (optional)</label>
+                        <input type="text" id="setupOrg" placeholder="e.g., Your Company Name">
+                        <small>Displayed in sidebar</small>
+                    </div>
                 </div>
-                <p style="color: #888; font-size: 0.75rem; margin-bottom: 8px;">Need help finding your credentials?</p>
-                <a href="https://webexcc.github.io/pages/Digital/" target="_blank" style="color: #00d4aa; font-size: 0.75rem;">View setup guide &rarr;</a>
 
-                <div style="margin-top: 16px; padding-top: 12px; border-top: 1px solid #252525;">
-                    <p style="color: #666; font-size: 0.65rem; font-style: italic; line-height: 1.5;">
-                        <strong style="color: #888;">Disclaimer:</strong> This is not an official Cisco or Webex product. Created by a Webex Collaboration Engineer for better visibility when configuring webchat. Feel free to reach out at <a href="mailto:chris@klopconsulting.com" style="color: #00d4aa;">chris@klopconsulting.com</a> with feedback or if you get stuck — no guarantees but happy to try to help!
-                        <br><br>
-                        <a href="https://github.com/chrisklop/widgetscope" target="_blank" style="color: #00d4aa;">View on GitHub &rarr;</a>
-                    </p>
+                <!-- Right Column - Instructions -->
+                <div class="setup-column">
+                    <div class="setup-column-title">Required Configuration</div>
+
+                    <div style="background: #1c1414; border: 1px solid #ef4444; border-radius: 8px; padding: 12px; margin-bottom: 12px;">
+                        <p style="color: #ef4444; font-size: 0.7rem; font-weight: 600; margin-bottom: 8px;">&#9888; Whitelist This Domain</p>
+                        <p style="color: #ccc; font-size: 0.65rem; margin-bottom: 8px; line-height: 1.4;"><strong>1. Webex Engage:</strong> Add <code style="background: #0d0d0d; padding: 2px 4px; border-radius: 3px; font-size: 0.6rem;">widgetscope.vercel.app</code> to your LiveChat asset's <strong>Websites</strong> tab.</p>
+                        <p style="color: #ccc; font-size: 0.65rem; margin: 0; line-height: 1.4;"><strong>2. Webex Connect Flow:</strong> Add domain to Custom Variables:<br>
+                        <span style="color: #888; font-size: 0.6rem;">Services &rarr; [Service] &rarr; Flows &rarr; [Flow] &rarr; Edit &rarr; Settings &rarr; Custom Variables &rarr; <code style="background: #0d0d0d; padding: 1px 3px; border-radius: 3px;">liveChatDomain</code></span></p>
+                    </div>
+
+                    <div style="background: #141c1a; border: 1px solid #00d4aa; border-radius: 8px; padding: 12px;">
+                        <p style="color: #00d4aa; font-size: 0.7rem; font-weight: 600; margin-bottom: 6px;">Need Help?</p>
+                        <p style="color: #ccc; font-size: 0.65rem; margin-bottom: 6px; line-height: 1.4;"><a href="https://webexcc.github.io/pages/Digital/" target="_blank" style="color: #00d4aa;">View official setup guide &rarr;</a></p>
+                        <p style="color: #888; font-size: 0.6rem; font-style: italic; line-height: 1.4; margin: 0;">
+                            Not an official Cisco/Webex product. Questions? <a href="mailto:chris@klopconsulting.com" style="color: #00d4aa;">chris@klopconsulting.com</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="setup-footer">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <a href="https://github.com/chrisklop/widgetscope" target="_blank" style="color: #666; font-size: 0.7rem; text-decoration: none;">
+                        GitHub &rarr;
+                    </a>
+                </div>
+                <div class="setup-actions">
+                    <button class="setup-btn secondary" onclick="closeSetupModal()">Cancel</button>
+                    <button class="setup-btn primary" onclick="saveConfig()">Save & Load</button>
                 </div>
             </div>
         </div>
@@ -2300,7 +2351,7 @@ document.getElementById('openChat').onclick = function() {
             widgetConfig: null,
             filters: {
                 devtools: true,
-                debugPanel: true,
+                debugPanel: false,
                 collapse: true
             },
             lastPostMessage: null,
