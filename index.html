@@ -3831,6 +3831,11 @@ document.getElementById('openChat').onclick = function() {
             } catch (e) {}
 
             debugTools.processPostMessage(event.origin, displayData, new Date().toISOString(), true);
+
+            // Also check postMessage for WebSocket/MQTT related content from widget
+            if (typeof safariDebug !== 'undefined') {
+                safariDebug.parseWidgetPostMessage(event.origin, data, displayData);
+            }
         }, false);
 
         // Intercept XHR requests
@@ -4106,6 +4111,13 @@ document.getElementById('openChat').onclick = function() {
                 // "12/11/2025, 5:19:07 PM – "First connected""
                 // "12/11/2025, 5:19:07 PM – "Now Webcoscket is :" – "Connected""
 
+                // Debug: log all messages to see what we're getting
+                if (message && (message.toLowerCase().includes('websocket') ||
+                    message.toLowerCase().includes('connected') ||
+                    message.toLowerCase().includes('webcoscket'))) {
+                    console.log('[WidgetScope] Detected potential WS log:', message);
+                }
+
                 const lowerMsg = message.toLowerCase();
 
                 // WebSocket connection status
@@ -4175,6 +4187,90 @@ document.getElementById('openChat').onclick = function() {
                     this.wsTotalMessages.received++;
                     this.logWidgetWsEvent('recv', { preview: message.substring(0, 80) });
                     this.updateWsUI();
+                }
+            },
+
+            // Parse postMessage from widget for WebSocket/chat activity
+            parseWidgetPostMessage: function(origin, rawData, parsedData) {
+                // Only process messages from IMI/widget origins
+                if (!origin || (!origin.includes('imi') && !origin.includes('webex'))) {
+                    return;
+                }
+
+                const data = parsedData || rawData;
+                if (!data) return;
+
+                // Convert to string for searching
+                const dataStr = typeof data === 'string' ? data : JSON.stringify(data);
+                const lowerStr = dataStr.toLowerCase();
+
+                // Check for chat message activity
+                // Widget postMessage often contains action types like "message", "chat", etc.
+                if (typeof data === 'object') {
+                    // Look for common widget message patterns
+                    const action = data.action || data.type || data.event || '';
+                    const actionLower = action.toLowerCase();
+
+                    // Message received from agent/bot
+                    if (actionLower === 'message' || actionLower === 'chatmessage' ||
+                        actionLower === 'agentmessage' || actionLower === 'botmessage' ||
+                        lowerStr.includes('"message"') && lowerStr.includes('"text"')) {
+                        this.wsTotalMessages.received++;
+                        this.logWidgetWsEvent('recv', {
+                            preview: data.text || data.message || dataStr.substring(0, 80),
+                            action: action,
+                            source: 'postMessage'
+                        });
+                        this.updateWsUI();
+                    }
+
+                    // User sent message
+                    if (actionLower === 'sendmessage' || actionLower === 'usermessage' ||
+                        actionLower === 'send') {
+                        this.wsTotalMessages.sent++;
+                        this.logWidgetWsEvent('sent', {
+                            preview: data.text || data.message || dataStr.substring(0, 80),
+                            action: action,
+                            source: 'postMessage'
+                        });
+                        this.updateWsUI();
+                    }
+
+                    // Connection status
+                    if (actionLower === 'connected' || actionLower === 'ready' ||
+                        data.status === 'connected' || data.connected === true) {
+                        if (this.widgetWsId === 0) {
+                            this.widgetWsId = 1;
+                            this.wsTotalOpened = 1;
+                        }
+                        this.widgetWsState = 'connected';
+                        this.logWidgetWsEvent('open', { note: 'Widget connected', source: 'postMessage' });
+                        this.updateWsUI();
+                    }
+
+                    if (actionLower === 'disconnected' || actionLower === 'close' ||
+                        data.status === 'disconnected' || data.connected === false) {
+                        this.widgetWsState = 'disconnected';
+                        this.logWidgetWsEvent('close', { note: 'Widget disconnected', source: 'postMessage' });
+                        this.updateWsUI();
+                    }
+
+                    // loadstyles is a key widget init message - indicates widget is ready
+                    if (actionLower === 'loadstyles' || action === 'loadstyles') {
+                        if (this.widgetWsId === 0) {
+                            this.widgetWsId = 1;
+                            this.wsTotalOpened = 1;
+                        }
+                        this.widgetWsState = 'connected';
+                        this.logWidgetWsEvent('open', { note: 'Widget initialized (loadstyles)', source: 'postMessage' });
+                        this.updateWsUI();
+                    }
+                }
+
+                // Also check raw string for patterns
+                if (lowerStr.includes('websocket') || lowerStr.includes('connected') ||
+                    lowerStr.includes('disconnected') || lowerStr.includes('mqtt')) {
+                    console.log('[WidgetScope] PostMessage with connection info:', origin, data);
                 }
             },
 
