@@ -640,6 +640,191 @@
 
         .config-value.success { color: #28a745; }
         .config-value.warning { color: #ffc107; }
+        .config-value.online { color: #28a745; }
+        .config-value.offline { color: #ef4444; }
+
+        /* Collapsible Section Styles */
+        .config-panel.collapsible .section-header {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            user-select: none;
+            transition: color 0.2s;
+        }
+
+        .config-panel.collapsible .section-header:hover {
+            color: #00d4aa;
+        }
+
+        .section-icon {
+            font-size: 0.85rem;
+        }
+
+        .section-toggle {
+            margin-left: auto;
+            font-size: 0.6rem;
+            color: #666;
+            transition: transform 0.2s;
+        }
+
+        .config-panel.collapsible.collapsed .section-toggle {
+            transform: rotate(-90deg);
+        }
+
+        .config-panel.collapsible.collapsed .section-content {
+            display: none;
+        }
+
+        .config-panel.collapsible.collapsed .section-summary {
+            display: flex;
+        }
+
+        /* Section Summary (visible when collapsed) */
+        .section-summary {
+            display: none;
+            gap: 6px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+        .metric-badge {
+            background: #1f1f1f;
+            color: #888;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.6rem;
+            font-weight: 600;
+        }
+
+        .metric-badge.online,
+        .metric-badge.visible {
+            background: rgba(40, 167, 69, 0.2);
+            color: #28a745;
+        }
+
+        .metric-badge.offline,
+        .metric-badge.hidden {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+
+        .metric-badge.warning {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+        }
+
+        /* Status Indicator Dot */
+        .section-status {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #28a745;
+            margin-left: 4px;
+            flex-shrink: 0;
+        }
+
+        .section-status.warning {
+            background: #f59e0b;
+        }
+
+        .section-status.error {
+            background: #ef4444;
+        }
+
+        .section-status.unknown {
+            background: #666;
+        }
+
+        /* Mini-Log Container */
+        .mini-log {
+            max-height: 150px;
+            overflow-y: auto;
+            background: #0d0d0d;
+            border-radius: 6px;
+            margin-top: 8px;
+            padding: 4px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.6rem;
+        }
+
+        .mini-log::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .mini-log::-webkit-scrollbar-track {
+            background: #0d0d0d;
+        }
+
+        .mini-log::-webkit-scrollbar-thumb {
+            background: #2a2a2a;
+            border-radius: 2px;
+        }
+
+        /* Mini-Log Entry */
+        .mini-log-entry {
+            padding: 3px 6px;
+            border-left: 2px solid #3a3a3a;
+            margin: 2px 0;
+            background: #141414;
+            border-radius: 0 3px 3px 0;
+        }
+
+        .mini-log-entry.ws-open,
+        .mini-log-entry.vis-visible,
+        .mini-log-entry.net-online {
+            border-left-color: #28a745;
+        }
+
+        .mini-log-entry.ws-close,
+        .mini-log-entry.ws-error,
+        .mini-log-entry.net-offline {
+            border-left-color: #ef4444;
+        }
+
+        .mini-log-entry.ws-message {
+            border-left-color: #06b6d4;
+        }
+
+        .mini-log-entry.ws-zombie,
+        .mini-log-entry.vis-hidden {
+            border-left-color: #f59e0b;
+        }
+
+        .mini-log-time {
+            color: #666;
+            font-size: 0.55rem;
+        }
+
+        .mini-log-msg {
+            color: #bbb;
+            word-break: break-all;
+        }
+
+        .mini-log-data {
+            color: #7dd3c0;
+            font-size: 0.55rem;
+            margin-top: 2px;
+            max-height: 60px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* WebSocket Direction Indicators */
+        .ws-direction {
+            display: inline-block;
+            width: 14px;
+            text-align: center;
+            margin-right: 4px;
+        }
+
+        .ws-direction.sent {
+            color: #f59e0b;
+        }
+
+        .ws-direction.received {
+            color: #06b6d4;
+        }
 
         /* Filter Toggle */
         .filter-section {
@@ -1834,6 +2019,184 @@ document.getElementById('openChat').onclick = function() {
                     <span class="config-value" id="fingerprint">-</span>
                 </div>
             </div>
+
+            <!-- WebSocket Monitor -->
+            <div class="config-panel collapsible collapsed" id="wsMonitorPanel">
+                <h3 class="section-header" onclick="safariDebug.toggleSection('wsMonitor')">
+                    <span class="section-icon">&#128268;</span>
+                    <span>WebSocket</span>
+                    <span class="section-status unknown" id="wsStatusDot"></span>
+                    <span class="section-toggle">&#9660;</span>
+                </h3>
+                <div class="section-summary" id="wsMonitorSummary">
+                    <span class="metric-badge" id="wsConnBadge">0 active</span>
+                    <span class="metric-badge" id="wsMsgBadge">0 msgs</span>
+                </div>
+                <div class="section-content" id="wsMonitorContent">
+                    <div class="config-item">
+                        <span class="config-label">Active</span>
+                        <span class="config-value" id="wsActiveCount">0</span>
+                    </div>
+                    <div class="config-item">
+                        <span class="config-label">Total Opened</span>
+                        <span class="config-value" id="wsTotalOpened">0</span>
+                    </div>
+                    <div class="config-item">
+                        <span class="config-label">Sent</span>
+                        <span class="config-value" id="wsMsgsSent">0</span>
+                    </div>
+                    <div class="config-item">
+                        <span class="config-label">Received</span>
+                        <span class="config-value" id="wsMsgsReceived">0</span>
+                    </div>
+                    <div class="config-item">
+                        <span class="config-label">Zombies</span>
+                        <span class="config-value warning" id="wsZombieCount">0</span>
+                    </div>
+                    <div class="mini-log" id="wsLogContainer"></div>
+                </div>
+            </div>
+
+            <!-- Page Visibility -->
+            <div class="config-panel collapsible collapsed" id="visibilityPanel">
+                <h3 class="section-header" onclick="safariDebug.toggleSection('visibility')">
+                    <span class="section-icon">&#128065;</span>
+                    <span>Visibility</span>
+                    <span class="section-status" id="visStatusDot"></span>
+                    <span class="section-toggle">&#9660;</span>
+                </h3>
+                <div class="section-summary" id="visibilitySummary">
+                    <span class="metric-badge visible" id="visStateBadge">Visible</span>
+                </div>
+                <div class="section-content" id="visibilityContent">
+                    <div class="config-item">
+                        <span class="config-label">State</span>
+                        <span class="config-value" id="visCurrentState">visible</span>
+                    </div>
+                    <div class="config-item">
+                        <span class="config-label">Time Visible</span>
+                        <span class="config-value" id="visTimeVisible">0s</span>
+                    </div>
+                    <div class="config-item">
+                        <span class="config-label">Time Hidden</span>
+                        <span class="config-value" id="visTimeHidden">0s</span>
+                    </div>
+                    <div class="config-item">
+                        <span class="config-label">Transitions</span>
+                        <span class="config-value" id="visTransitions">0</span>
+                    </div>
+                    <div class="mini-log" id="visLogContainer"></div>
+                </div>
+            </div>
+
+            <!-- Browser Detection -->
+            <div class="config-panel collapsible collapsed" id="browserPanel">
+                <h3 class="section-header" onclick="safariDebug.toggleSection('browser')">
+                    <span class="section-icon">&#127758;</span>
+                    <span>Browser</span>
+                    <span class="section-status" id="browserStatusDot"></span>
+                    <span class="section-toggle">&#9660;</span>
+                </h3>
+                <div class="section-summary" id="browserSummary">
+                    <span class="metric-badge" id="browserBadge">Detecting...</span>
+                </div>
+                <div class="section-content" id="browserContent">
+                    <div class="config-item">
+                        <span class="config-label">Browser</span>
+                        <span class="config-value" id="browserDetected">-</span>
+                    </div>
+                    <div class="config-item">
+                        <span class="config-label">Version</span>
+                        <span class="config-value" id="browserVersion">-</span>
+                    </div>
+                    <div class="config-item">
+                        <span class="config-label">Platform</span>
+                        <span class="config-value" id="browserPlatform">-</span>
+                    </div>
+                    <div class="config-item">
+                        <span class="config-label">iOS</span>
+                        <span class="config-value" id="iosVersion">N/A</span>
+                    </div>
+                    <div class="config-item" id="webkitBugWarning" style="display: none;">
+                        <span class="config-label">Warning</span>
+                        <span class="config-value warning">WebKit #247943</span>
+                    </div>
+                    <div class="config-item" id="itpWarning" style="display: none;">
+                        <span class="config-label">ITP</span>
+                        <span class="config-value warning">Iframe Restricted</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Network Status -->
+            <div class="config-panel collapsible collapsed" id="networkStatusPanel">
+                <h3 class="section-header" onclick="safariDebug.toggleSection('networkStatus')">
+                    <span class="section-icon">&#128225;</span>
+                    <span>Network</span>
+                    <span class="section-status" id="netStatusDot"></span>
+                    <span class="section-toggle">&#9660;</span>
+                </h3>
+                <div class="section-summary" id="networkSummary">
+                    <span class="metric-badge online" id="netStateBadge">Online</span>
+                </div>
+                <div class="section-content" id="networkContent">
+                    <div class="config-item">
+                        <span class="config-label">Status</span>
+                        <span class="config-value online" id="netCurrentStatus">Online</span>
+                    </div>
+                    <div class="config-item">
+                        <span class="config-label">Type</span>
+                        <span class="config-value" id="netConnectionType">-</span>
+                    </div>
+                    <div class="config-item">
+                        <span class="config-label">Effective</span>
+                        <span class="config-value" id="netEffectiveType">-</span>
+                    </div>
+                    <div class="config-item">
+                        <span class="config-label">Transitions</span>
+                        <span class="config-value" id="netTransitions">0</span>
+                    </div>
+                    <div class="mini-log" id="netLogContainer"></div>
+                </div>
+            </div>
+
+            <!-- Storage Diagnostics -->
+            <div class="config-panel collapsible collapsed" id="storagePanel">
+                <h3 class="section-header" onclick="safariDebug.toggleSection('storage')">
+                    <span class="section-icon">&#128451;</span>
+                    <span>Storage</span>
+                    <span class="section-status" id="storageStatusDot"></span>
+                    <span class="section-toggle">&#9660;</span>
+                </h3>
+                <div class="section-summary" id="storageSummary">
+                    <span class="metric-badge" id="storageBadge">Checking...</span>
+                </div>
+                <div class="section-content" id="storageContent">
+                    <div class="config-item">
+                        <span class="config-label">localStorage</span>
+                        <span class="config-value" id="localStorageStatus">-</span>
+                    </div>
+                    <div class="config-item">
+                        <span class="config-label">sessionStorage</span>
+                        <span class="config-value" id="sessionStorageStatus">-</span>
+                    </div>
+                    <div class="config-item">
+                        <span class="config-label">Cookies</span>
+                        <span class="config-value" id="cookieStatus">-</span>
+                    </div>
+                    <div class="config-item">
+                        <span class="config-label">IndexedDB</span>
+                        <span class="config-value" id="indexedDBStatus">-</span>
+                    </div>
+                    <div class="config-item">
+                        <span class="config-label">Context</span>
+                        <span class="config-value" id="storageContext">-</span>
+                    </div>
+                    <button class="control-btn secondary" onclick="safariDebug.runStorageTest()" style="margin-top: 8px; width: 100%; font-size: 0.65rem;">
+                        &#128269; Re-test Storage
+                    </button>
+                </div>
+            </div>
         </div>
 
         <!-- Column 2 - Console Logs (top) -->
@@ -2699,7 +3062,8 @@ document.getElementById('openChat').onclick = function() {
                         totalPostMessages: this.rawLogs.postMessage.length,
                         filteredOut: this.filteredCount,
                         widgetMessages: this.widgetMessageCount
-                    }
+                    },
+                    safariDebug: typeof safariDebug !== 'undefined' ? safariDebug.getExportData() : null
                 };
                 navigator.clipboard.writeText(JSON.stringify(report, null, 2)).then(() => {
                     showToast('Full report copied (noise filtered)!');
@@ -2722,6 +3086,10 @@ document.getElementById('openChat').onclick = function() {
                 this.addLog('events', 'Logs cleared', null, 'info');
                 // Clear status orb alerts
                 statusOrb.clearAlerts();
+                // Clear Safari debug mini-logs
+                if (typeof safariDebug !== 'undefined') {
+                    safariDebug.clearLogs();
+                }
             },
 
             exportLogs: function() {
@@ -2737,7 +3105,8 @@ document.getElementById('openChat').onclick = function() {
                         postMessage: this.logs.postMessage.filter(l => l.category === 'widget'),
                         network: this.logs.network,
                         events: this.logs.events
-                    }
+                    },
+                    safariDebug: typeof safariDebug !== 'undefined' ? safariDebug.getExportData() : null
                 };
                 const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
                 const url = URL.createObjectURL(blob);
@@ -3087,6 +3456,809 @@ document.getElementById('openChat').onclick = function() {
             });
         });
         scriptObserver.observe(document.body, { childList: true, subtree: true });
+
+        // ========================================
+        // Safari WebSocket Debug Tools
+        // ========================================
+
+        const safariDebug = {
+            // WebSocket tracking
+            websockets: new Map(),
+            wsIdCounter: 0,
+            wsTotalOpened: 0,
+            wsTotalMessages: { sent: 0, received: 0 },
+            zombieCheckInterval: null,
+
+            // Visibility tracking
+            visibilityState: document.visibilityState,
+            visibilityTransitions: 0,
+            timeVisible: 0,
+            timeHidden: 0,
+            lastVisibilityChange: Date.now(),
+
+            // Network tracking
+            networkTransitions: 0,
+
+            // Browser info
+            browserInfo: null,
+
+            // Storage test results
+            storageResults: null,
+
+            // Section collapse state
+            collapsedSections: new Set(['wsMonitor', 'visibility', 'browser', 'networkStatus', 'storage']),
+
+            // Initialize all Safari debug features
+            init: function() {
+                this.interceptWebSocket();
+                this.initVisibilityTracking();
+                this.initNetworkTracking();
+                this.detectBrowser();
+                this.runStorageTest();
+                this.startZombieDetection();
+                this.loadSectionStates();
+
+                debugTools.addLog('events', 'Safari debug tools initialized', null, 'success');
+            },
+
+            // Toggle section collapse
+            toggleSection: function(sectionId) {
+                const panel = document.getElementById(sectionId + 'Panel');
+                if (!panel) return;
+
+                if (this.collapsedSections.has(sectionId)) {
+                    this.collapsedSections.delete(sectionId);
+                    panel.classList.remove('collapsed');
+                } else {
+                    this.collapsedSections.add(sectionId);
+                    panel.classList.add('collapsed');
+                }
+
+                this.saveSectionStates();
+            },
+
+            saveSectionStates: function() {
+                try {
+                    localStorage.setItem('widgetScope_collapsedSections',
+                        JSON.stringify([...this.collapsedSections]));
+                } catch (e) {}
+            },
+
+            loadSectionStates: function() {
+                try {
+                    const saved = localStorage.getItem('widgetScope_collapsedSections');
+                    if (saved) {
+                        this.collapsedSections = new Set(JSON.parse(saved));
+                    }
+                    // Apply initial state
+                    this.collapsedSections.forEach(sectionId => {
+                        const panel = document.getElementById(sectionId + 'Panel');
+                        if (panel) panel.classList.add('collapsed');
+                    });
+                } catch (e) {}
+            },
+
+            // ========================================
+            // WebSocket Interception
+            // ========================================
+
+            interceptWebSocket: function() {
+                const self = this;
+                const OriginalWebSocket = window.WebSocket;
+
+                window.WebSocket = function(url, protocols) {
+                    const wsId = ++self.wsIdCounter;
+                    const ws = protocols ? new OriginalWebSocket(url, protocols) : new OriginalWebSocket(url);
+
+                    const wsData = {
+                        id: wsId,
+                        ws: ws,
+                        url: url,
+                        protocols: protocols,
+                        openTime: null,
+                        closeTime: null,
+                        state: 'connecting',
+                        msgSent: 0,
+                        msgReceived: 0,
+                        lastActivity: Date.now(),
+                        closeCode: null,
+                        closeReason: null,
+                        markedZombie: false
+                    };
+
+                    self.websockets.set(wsId, wsData);
+                    self.logWsEvent(wsId, 'connecting', { url: url.substring(0, 60) + (url.length > 60 ? '...' : '') });
+
+                    // Intercept onopen
+                    ws.addEventListener('open', function(event) {
+                        wsData.openTime = Date.now();
+                        wsData.state = 'open';
+                        wsData.lastActivity = Date.now();
+                        self.wsTotalOpened++;
+                        self.logWsEvent(wsId, 'open', { url: url.substring(0, 40) });
+                        self.updateWsUI();
+                    });
+
+                    // Intercept onclose
+                    ws.addEventListener('close', function(event) {
+                        wsData.closeTime = Date.now();
+                        wsData.state = 'closed';
+                        wsData.closeCode = event.code;
+                        wsData.closeReason = event.reason || 'No reason';
+
+                        const duration = wsData.openTime ?
+                            Math.round((wsData.closeTime - wsData.openTime) / 1000) : 0;
+
+                        self.logWsEvent(wsId, 'close', {
+                            code: event.code,
+                            reason: wsData.closeReason.substring(0, 30),
+                            duration: duration + 's',
+                            wasClean: event.wasClean
+                        });
+                        self.updateWsUI();
+
+                        // Correlate with visibility state
+                        if (document.visibilityState === 'hidden') {
+                            self.logWsEvent(wsId, 'correlation', { note: 'Closed while hidden' });
+                        }
+                    });
+
+                    // Intercept onerror
+                    ws.addEventListener('error', function(event) {
+                        wsData.state = 'error';
+                        self.logWsEvent(wsId, 'error', {
+                            readyState: ws.readyState
+                        });
+                        self.updateWsUI();
+                        statusOrb.logError();
+                    });
+
+                    // Intercept onmessage
+                    ws.addEventListener('message', function(event) {
+                        wsData.msgReceived++;
+                        wsData.lastActivity = Date.now();
+                        wsData.markedZombie = false; // Clear zombie flag on activity
+                        self.wsTotalMessages.received++;
+
+                        let msgPreview = '';
+                        try {
+                            if (typeof event.data === 'string') {
+                                msgPreview = event.data.substring(0, 150);
+                                if (event.data.length > 150) msgPreview += '...';
+                            } else if (event.data instanceof Blob) {
+                                msgPreview = '[Blob: ' + event.data.size + ' bytes]';
+                            } else if (event.data instanceof ArrayBuffer) {
+                                msgPreview = '[ArrayBuffer: ' + event.data.byteLength + ' bytes]';
+                            }
+                        } catch (e) {
+                            msgPreview = '[Unable to read]';
+                        }
+
+                        self.logWsEvent(wsId, 'recv', { preview: msgPreview });
+                        self.updateWsUI();
+                    });
+
+                    // Intercept send
+                    const originalSend = ws.send.bind(ws);
+                    ws.send = function(data) {
+                        wsData.msgSent++;
+                        wsData.lastActivity = Date.now();
+                        wsData.markedZombie = false;
+                        self.wsTotalMessages.sent++;
+
+                        let msgPreview = '';
+                        try {
+                            if (typeof data === 'string') {
+                                msgPreview = data.substring(0, 150);
+                                if (data.length > 150) msgPreview += '...';
+                            } else if (data instanceof Blob) {
+                                msgPreview = '[Blob: ' + data.size + ' bytes]';
+                            } else if (data instanceof ArrayBuffer) {
+                                msgPreview = '[ArrayBuffer: ' + data.byteLength + ' bytes]';
+                            }
+                        } catch (e) {
+                            msgPreview = '[Unable to read]';
+                        }
+
+                        self.logWsEvent(wsId, 'sent', { preview: msgPreview });
+                        self.updateWsUI();
+
+                        return originalSend(data);
+                    };
+
+                    return ws;
+                };
+
+                // Copy static properties
+                window.WebSocket.CONNECTING = OriginalWebSocket.CONNECTING;
+                window.WebSocket.OPEN = OriginalWebSocket.OPEN;
+                window.WebSocket.CLOSING = OriginalWebSocket.CLOSING;
+                window.WebSocket.CLOSED = OriginalWebSocket.CLOSED;
+                window.WebSocket.prototype = OriginalWebSocket.prototype;
+            },
+
+            // Zombie detection
+            startZombieDetection: function() {
+                const self = this;
+                const ZOMBIE_THRESHOLD = 60000; // 60 seconds
+
+                this.zombieCheckInterval = setInterval(function() {
+                    const now = Date.now();
+
+                    self.websockets.forEach((wsData, wsId) => {
+                        if (wsData.state === 'open') {
+                            const ws = wsData.ws;
+                            const timeSinceActivity = now - wsData.lastActivity;
+
+                            if (ws.readyState === WebSocket.OPEN && timeSinceActivity > ZOMBIE_THRESHOLD) {
+                                if (!wsData.markedZombie) {
+                                    wsData.markedZombie = true;
+                                    self.logWsEvent(wsId, 'zombie', {
+                                        lastActivity: Math.round(timeSinceActivity / 1000) + 's ago',
+                                        note: 'Possible zombie'
+                                    });
+                                    self.updateWsUI();
+                                    statusOrb.logWarning();
+                                }
+                            }
+                        }
+                    });
+                }, 10000);
+            },
+
+            logWsEvent: function(wsId, type, data) {
+                const timestamp = new Date().toLocaleTimeString();
+                const container = document.getElementById('wsLogContainer');
+                if (!container) return;
+
+                const entry = document.createElement('div');
+                let entryClass = 'mini-log-entry';
+                let direction = '';
+
+                switch (type) {
+                    case 'open':
+                        entryClass += ' ws-open';
+                        break;
+                    case 'close':
+                        entryClass += ' ws-close';
+                        break;
+                    case 'sent':
+                        entryClass += ' ws-message';
+                        direction = '<span class="ws-direction sent">&#8593;</span>';
+                        break;
+                    case 'recv':
+                        entryClass += ' ws-message';
+                        direction = '<span class="ws-direction received">&#8595;</span>';
+                        break;
+                    case 'error':
+                        entryClass += ' ws-error';
+                        break;
+                    case 'zombie':
+                        entryClass += ' ws-zombie';
+                        break;
+                }
+
+                entry.className = entryClass;
+                entry.innerHTML =
+                    '<div class="mini-log-time">' + timestamp + ' [WS#' + wsId + ']</div>' +
+                    '<div class="mini-log-msg">' + direction + type + '</div>' +
+                    (data ? '<div class="mini-log-data">' + this.escapeHtml(JSON.stringify(data)) + '</div>' : '');
+
+                container.appendChild(entry);
+                container.scrollTop = container.scrollHeight;
+
+                // Limit log entries
+                while (container.children.length > 100) {
+                    container.removeChild(container.firstChild);
+                }
+
+                // Also log important events to main panel
+                if (['open', 'close', 'error', 'zombie'].includes(type)) {
+                    debugTools.addLog('events', 'WS#' + wsId + ' ' + type, data,
+                        type === 'error' || type === 'zombie' ? 'error' :
+                        type === 'close' ? 'warn' : 'success');
+                }
+            },
+
+            updateWsUI: function() {
+                const activeCount = [...this.websockets.values()].filter(w => w.state === 'open').length;
+                const zombieCount = [...this.websockets.values()].filter(w => w.markedZombie).length;
+                const totalMsgs = this.wsTotalMessages.sent + this.wsTotalMessages.received;
+
+                document.getElementById('wsActiveCount').textContent = activeCount;
+                document.getElementById('wsTotalOpened').textContent = this.wsTotalOpened;
+                document.getElementById('wsMsgsSent').textContent = this.wsTotalMessages.sent;
+                document.getElementById('wsMsgsReceived').textContent = this.wsTotalMessages.received;
+                document.getElementById('wsZombieCount').textContent = zombieCount;
+
+                // Update summary badges
+                document.getElementById('wsConnBadge').textContent = activeCount + ' active';
+                document.getElementById('wsMsgBadge').textContent = totalMsgs + ' msgs';
+
+                // Update status dot
+                const statusDot = document.getElementById('wsStatusDot');
+                if (zombieCount > 0) {
+                    statusDot.className = 'section-status warning';
+                } else if (activeCount > 0) {
+                    statusDot.className = 'section-status';
+                } else {
+                    statusDot.className = 'section-status unknown';
+                }
+            },
+
+            // ========================================
+            // Visibility Tracking
+            // ========================================
+
+            initVisibilityTracking: function() {
+                const self = this;
+
+                document.addEventListener('visibilitychange', function() {
+                    const now = Date.now();
+                    const prevState = self.visibilityState;
+                    const newState = document.visibilityState;
+                    const duration = now - self.lastVisibilityChange;
+
+                    // Update time counters
+                    if (prevState === 'visible') {
+                        self.timeVisible += duration;
+                    } else {
+                        self.timeHidden += duration;
+                    }
+
+                    self.visibilityState = newState;
+                    self.lastVisibilityChange = now;
+                    self.visibilityTransitions++;
+
+                    const activeWs = [...self.websockets.values()].filter(w => w.state === 'open').length;
+
+                    const eventData = {
+                        from: prevState,
+                        to: newState,
+                        duration: Math.round(duration / 1000) + 's',
+                        activeWS: activeWs
+                    };
+
+                    self.logVisibilityEvent(newState, eventData);
+                    self.updateVisibilityUI();
+
+                    // Log to main panel
+                    if (newState === 'hidden') {
+                        debugTools.addLog('events', 'Page hidden - monitoring WebSockets', { activeWS: activeWs }, 'warn');
+                    } else {
+                        debugTools.addLog('events', 'Page visible', { activeWS: activeWs }, 'info');
+                    }
+                });
+
+                this.updateVisibilityUI();
+                setInterval(() => this.updateVisibilityUI(), 1000);
+            },
+
+            logVisibilityEvent: function(state, data) {
+                const timestamp = new Date().toLocaleTimeString();
+                const container = document.getElementById('visLogContainer');
+                if (!container) return;
+
+                const entry = document.createElement('div');
+                entry.className = 'mini-log-entry vis-' + state;
+                entry.innerHTML =
+                    '<div class="mini-log-time">' + timestamp + '</div>' +
+                    '<div class="mini-log-msg">State: ' + state + '</div>' +
+                    '<div class="mini-log-data">' + this.escapeHtml(JSON.stringify(data)) + '</div>';
+
+                container.appendChild(entry);
+                container.scrollTop = container.scrollHeight;
+
+                while (container.children.length > 50) {
+                    container.removeChild(container.firstChild);
+                }
+            },
+
+            updateVisibilityUI: function() {
+                const now = Date.now();
+                const currentDuration = now - this.lastVisibilityChange;
+
+                let totalVisible = this.timeVisible;
+                let totalHidden = this.timeHidden;
+
+                if (this.visibilityState === 'visible') {
+                    totalVisible += currentDuration;
+                } else {
+                    totalHidden += currentDuration;
+                }
+
+                document.getElementById('visCurrentState').textContent = this.visibilityState;
+                document.getElementById('visTimeVisible').textContent = this.formatDuration(totalVisible);
+                document.getElementById('visTimeHidden').textContent = this.formatDuration(totalHidden);
+                document.getElementById('visTransitions').textContent = this.visibilityTransitions;
+
+                // Update summary
+                const stateBadge = document.getElementById('visStateBadge');
+                stateBadge.textContent = this.visibilityState === 'visible' ? 'Visible' : 'Hidden';
+                stateBadge.className = 'metric-badge ' + this.visibilityState;
+
+                // Update status dot
+                const statusDot = document.getElementById('visStatusDot');
+                statusDot.className = this.visibilityState === 'visible' ?
+                    'section-status' : 'section-status warning';
+            },
+
+            formatDuration: function(ms) {
+                const seconds = Math.floor(ms / 1000);
+                const minutes = Math.floor(seconds / 60);
+                const hours = Math.floor(minutes / 60);
+
+                if (hours > 0) {
+                    return hours + 'h ' + (minutes % 60) + 'm';
+                } else if (minutes > 0) {
+                    return minutes + 'm ' + (seconds % 60) + 's';
+                } else {
+                    return seconds + 's';
+                }
+            },
+
+            // ========================================
+            // Network Status Tracking
+            // ========================================
+
+            initNetworkTracking: function() {
+                const self = this;
+
+                this.updateNetworkUI();
+
+                window.addEventListener('online', function() {
+                    self.networkTransitions++;
+                    self.logNetworkEvent('online', { time: new Date().toLocaleTimeString() });
+                    self.updateNetworkUI();
+                    debugTools.addLog('events', 'Network: Back online', null, 'success');
+                });
+
+                window.addEventListener('offline', function() {
+                    self.networkTransitions++;
+                    const activeWs = [...self.websockets.values()].filter(w => w.state === 'open').length;
+                    self.logNetworkEvent('offline', { activeWS: activeWs });
+                    self.updateNetworkUI();
+                    debugTools.addLog('events', 'Network: Went offline', { activeWS: activeWs }, 'error');
+                    statusOrb.logError();
+                });
+
+                if ('connection' in navigator) {
+                    navigator.connection.addEventListener('change', function() {
+                        self.updateNetworkUI();
+                    });
+                }
+            },
+
+            logNetworkEvent: function(type, data) {
+                const timestamp = new Date().toLocaleTimeString();
+                const container = document.getElementById('netLogContainer');
+                if (!container) return;
+
+                const entry = document.createElement('div');
+                entry.className = 'mini-log-entry net-' + type;
+                entry.innerHTML =
+                    '<div class="mini-log-time">' + timestamp + '</div>' +
+                    '<div class="mini-log-msg">Network: ' + type + '</div>' +
+                    (data ? '<div class="mini-log-data">' + this.escapeHtml(JSON.stringify(data)) + '</div>' : '');
+
+                container.appendChild(entry);
+                container.scrollTop = container.scrollHeight;
+            },
+
+            updateNetworkUI: function() {
+                const isOnline = navigator.onLine;
+
+                const statusEl = document.getElementById('netCurrentStatus');
+                statusEl.textContent = isOnline ? 'Online' : 'Offline';
+                statusEl.className = 'config-value ' + (isOnline ? 'online' : 'offline');
+
+                if ('connection' in navigator) {
+                    document.getElementById('netConnectionType').textContent =
+                        navigator.connection.type || 'unknown';
+                    document.getElementById('netEffectiveType').textContent =
+                        navigator.connection.effectiveType || 'unknown';
+                } else {
+                    document.getElementById('netConnectionType').textContent = 'N/A';
+                    document.getElementById('netEffectiveType').textContent = 'N/A';
+                }
+
+                document.getElementById('netTransitions').textContent = this.networkTransitions;
+
+                // Update summary
+                const statusBadge = document.getElementById('netStateBadge');
+                statusBadge.textContent = isOnline ? 'Online' : 'Offline';
+                statusBadge.className = 'metric-badge ' + (isOnline ? 'online' : 'offline');
+
+                // Update status dot
+                const statusDot = document.getElementById('netStatusDot');
+                statusDot.className = isOnline ? 'section-status' : 'section-status error';
+            },
+
+            // ========================================
+            // Browser Detection
+            // ========================================
+
+            detectBrowser: function() {
+                const ua = navigator.userAgent;
+                const info = {
+                    browser: 'Unknown',
+                    version: 'Unknown',
+                    platform: navigator.platform || 'Unknown',
+                    isSafari: false,
+                    isIOS: false,
+                    iosVersion: null,
+                    safariVersion: null,
+                    hasWebKitBug: false,
+                    isIframe: window !== window.top,
+                    hasITPRestrictions: false
+                };
+
+                // Detect Safari
+                const safariMatch = ua.match(/Version\/(\d+\.?\d*).* Safari/);
+                if (safariMatch && !ua.includes('Chrome') && !ua.includes('Chromium')) {
+                    info.browser = 'Safari';
+                    info.version = safariMatch[1];
+                    info.safariVersion = parseFloat(safariMatch[1]);
+                    info.isSafari = true;
+
+                    if (info.safariVersion < 17.3) {
+                        info.hasWebKitBug = true;
+                    }
+                }
+
+                // Detect iOS
+                if (/iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) {
+                    info.isIOS = true;
+                    const iosMatch = ua.match(/OS (\d+)_(\d+)/);
+                    if (iosMatch) {
+                        info.iosVersion = iosMatch[1] + '.' + iosMatch[2];
+                    }
+                }
+
+                // Detect other browsers
+                if (!info.isSafari) {
+                    const chromeMatch = ua.match(/Chrome\/(\d+)/);
+                    if (chromeMatch) {
+                        info.browser = 'Chrome';
+                        info.version = chromeMatch[1];
+                    }
+
+                    const firefoxMatch = ua.match(/Firefox\/(\d+)/);
+                    if (firefoxMatch) {
+                        info.browser = 'Firefox';
+                        info.version = firefoxMatch[1];
+                    }
+
+                    const edgeMatch = ua.match(/Edg\/(\d+)/);
+                    if (edgeMatch) {
+                        info.browser = 'Edge';
+                        info.version = edgeMatch[1];
+                    }
+                }
+
+                if (info.isIframe && info.isSafari) {
+                    info.hasITPRestrictions = true;
+                }
+
+                this.browserInfo = info;
+                this.updateBrowserUI();
+
+                if (info.hasWebKitBug) {
+                    debugTools.addLog('events', 'Safari WebKit bug #247943 detected', {
+                        version: info.safariVersion,
+                        note: 'WebSocket may drop when hidden'
+                    }, 'warn');
+                    statusOrb.logWarning();
+                }
+
+                if (info.hasITPRestrictions) {
+                    debugTools.addLog('events', 'Safari ITP: Running in iframe', {
+                        note: 'Storage may be restricted'
+                    }, 'warn');
+                }
+            },
+
+            updateBrowserUI: function() {
+                const info = this.browserInfo;
+
+                document.getElementById('browserDetected').textContent = info.browser;
+                document.getElementById('browserVersion').textContent = info.version;
+                document.getElementById('browserPlatform').textContent = info.platform;
+                document.getElementById('iosVersion').textContent = info.iosVersion || 'N/A';
+
+                // Update summary
+                document.getElementById('browserBadge').textContent =
+                    info.browser + ' ' + info.version;
+
+                if (info.hasWebKitBug) {
+                    document.getElementById('webkitBugWarning').style.display = 'flex';
+                }
+
+                if (info.hasITPRestrictions) {
+                    document.getElementById('itpWarning').style.display = 'flex';
+                }
+
+                // Update status dot
+                const statusDot = document.getElementById('browserStatusDot');
+                if (info.hasWebKitBug || info.hasITPRestrictions) {
+                    statusDot.className = 'section-status warning';
+                } else {
+                    statusDot.className = 'section-status';
+                }
+            },
+
+            // ========================================
+            // Storage Diagnostics
+            // ========================================
+
+            runStorageTest: function() {
+                const self = this;
+                const results = {
+                    localStorage: this.testLocalStorage(),
+                    sessionStorage: this.testSessionStorage(),
+                    cookies: this.testCookies(),
+                    indexedDB: { available: false, status: 'Testing...' },
+                    context: this.detectStorageContext()
+                };
+
+                this.testIndexedDB().then(function(result) {
+                    results.indexedDB = result;
+                    self.storageResults = results;
+                    self.updateStorageUI();
+                });
+
+                this.storageResults = results;
+                this.updateStorageUI();
+            },
+
+            testLocalStorage: function() {
+                try {
+                    const testKey = '__widgetscope_test__';
+                    localStorage.setItem(testKey, 'test');
+                    localStorage.removeItem(testKey);
+                    return { available: true, status: 'OK' };
+                } catch (e) {
+                    return { available: false, status: 'Blocked' };
+                }
+            },
+
+            testSessionStorage: function() {
+                try {
+                    const testKey = '__widgetscope_test__';
+                    sessionStorage.setItem(testKey, 'test');
+                    sessionStorage.removeItem(testKey);
+                    return { available: true, status: 'OK' };
+                } catch (e) {
+                    return { available: false, status: 'Blocked' };
+                }
+            },
+
+            testCookies: function() {
+                try {
+                    document.cookie = '__widgetscope_test__=1; SameSite=Lax';
+                    const hasCookie = document.cookie.includes('__widgetscope_test__');
+                    document.cookie = '__widgetscope_test__=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+                    return { available: hasCookie, status: hasCookie ? 'OK' : 'Blocked' };
+                } catch (e) {
+                    return { available: false, status: 'Error' };
+                }
+            },
+
+            testIndexedDB: function() {
+                return new Promise(function(resolve) {
+                    try {
+                        const request = indexedDB.open('__widgetscope_test__');
+                        request.onerror = function() {
+                            resolve({ available: false, status: 'Blocked' });
+                        };
+                        request.onsuccess = function() {
+                            request.result.close();
+                            indexedDB.deleteDatabase('__widgetscope_test__');
+                            resolve({ available: true, status: 'OK' });
+                        };
+                    } catch (e) {
+                        resolve({ available: false, status: 'Error' });
+                    }
+                });
+            },
+
+            detectStorageContext: function() {
+                const isIframe = window !== window.top;
+                const isCrossOrigin = isIframe && (function() {
+                    try {
+                        return !window.top.location.href;
+                    } catch (e) {
+                        return true;
+                    }
+                })();
+
+                if (isCrossOrigin) {
+                    return '3rd-party iframe';
+                } else if (isIframe) {
+                    return 'Same-origin iframe';
+                } else {
+                    return 'Top-level';
+                }
+            },
+
+            updateStorageUI: function() {
+                const results = this.storageResults;
+                if (!results) return;
+
+                const setStatus = function(id, result) {
+                    const el = document.getElementById(id);
+                    if (!el) return;
+                    el.textContent = result.status;
+                    el.className = 'config-value ' + (result.available ? 'success' : 'warning');
+                };
+
+                setStatus('localStorageStatus', results.localStorage);
+                setStatus('sessionStorageStatus', results.sessionStorage);
+                setStatus('cookieStatus', results.cookies);
+                setStatus('indexedDBStatus', results.indexedDB);
+
+                document.getElementById('storageContext').textContent = results.context;
+
+                // Update summary
+                const allOk = results.localStorage.available &&
+                              results.sessionStorage.available &&
+                              results.cookies.available;
+
+                const statusBadge = document.getElementById('storageBadge');
+                statusBadge.textContent = allOk ? 'All OK' : 'Issues';
+                statusBadge.className = 'metric-badge ' + (allOk ? 'online' : 'warning');
+
+                // Update status dot
+                const statusDot = document.getElementById('storageStatusDot');
+                statusDot.className = allOk ? 'section-status' : 'section-status warning';
+
+                if (!allOk) {
+                    debugTools.addLog('events', 'Storage access issues', results, 'warn');
+                }
+            },
+
+            // Utility
+            escapeHtml: function(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            },
+
+            // Get data for export
+            getExportData: function() {
+                return {
+                    browser: this.browserInfo,
+                    websockets: {
+                        totalOpened: this.wsTotalOpened,
+                        activeCount: [...this.websockets.values()].filter(w => w.state === 'open').length,
+                        messages: this.wsTotalMessages,
+                        zombiesDetected: [...this.websockets.values()].filter(w => w.markedZombie).length
+                    },
+                    visibility: {
+                        state: this.visibilityState,
+                        transitions: this.visibilityTransitions,
+                        timeVisible: this.formatDuration(this.timeVisible),
+                        timeHidden: this.formatDuration(this.timeHidden)
+                    },
+                    storage: this.storageResults,
+                    network: {
+                        online: navigator.onLine,
+                        transitions: this.networkTransitions
+                    }
+                };
+            },
+
+            // Clear mini-logs
+            clearLogs: function() {
+                ['wsLogContainer', 'visLogContainer', 'netLogContainer'].forEach(function(id) {
+                    const el = document.getElementById(id);
+                    if (el) el.innerHTML = '';
+                });
+            }
+        };
+
+        // Initialize Safari debug tools
+        setTimeout(function() { safariDebug.init(); }, 100);
 
         // Initialize
         debugTools.addLog('events', 'Dashboard ready', { session: sessionUUID }, 'success');
