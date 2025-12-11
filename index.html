@@ -4268,6 +4268,27 @@ document.getElementById('openChat').onclick = function() {
                         this.logWidgetWsEvent('open', { note: 'Widget initialized (loadstyles)', source: 'postMessage' });
                         this.updateWsUI();
                     }
+
+                    // setlocal/getlocal - widget is storing/retrieving data (activity indicator)
+                    if (actionLower === 'setlocal' || actionLower === 'getlocal') {
+                        const key = data.key || '';
+                        // Log interesting storage events as activity
+                        if (key.includes('message') || key.includes('chat') || key.includes('conversation')) {
+                            this.wsTotalMessages.received++;
+                            this.logWidgetWsEvent('recv', {
+                                preview: `Storage: ${key}`,
+                                action: action,
+                                source: 'postMessage'
+                            });
+                            this.updateWsUI();
+                        }
+                    }
+
+                    // scrollbottom - indicates new message appeared in chat
+                    if (actionLower === 'scrollbottom' || actionLower === 'scroll') {
+                        // This often fires when messages are added
+                        this.lastActivityTime = Date.now();
+                    }
                 }
 
                 // Also check raw string for patterns
@@ -4615,6 +4636,9 @@ document.getElementById('openChat').onclick = function() {
                         if (wsData.state === 'open') {
                             const ws = wsData.ws;
                             const timeSinceActivity = now - wsData.lastActivity;
+
+                            // Skip if ws is null (synthetic widget-iframe entries)
+                            if (!ws) return;
 
                             if (ws.readyState === WebSocket.OPEN && timeSinceActivity > ZOMBIE_THRESHOLD) {
                                 if (!wsData.markedZombie) {
