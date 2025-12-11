@@ -826,6 +826,85 @@
             color: #06b6d4;
         }
 
+        /* MQTT Packet Type Badges */
+        .mqtt-packet-type {
+            display: inline-block;
+            font-size: 0.55rem;
+            font-weight: 600;
+            padding: 1px 5px;
+            border-radius: 3px;
+            margin-right: 4px;
+            text-transform: uppercase;
+        }
+
+        .mqtt-packet-type.connect { background: #2563eb; color: #fff; }
+        .mqtt-packet-type.connack { background: #16a34a; color: #fff; }
+        .mqtt-packet-type.publish { background: #7c3aed; color: #fff; }
+        .mqtt-packet-type.puback { background: #9333ea; color: #fff; }
+        .mqtt-packet-type.subscribe { background: #0891b2; color: #fff; }
+        .mqtt-packet-type.suback { background: #06b6d4; color: #fff; }
+        .mqtt-packet-type.unsubscribe { background: #dc2626; color: #fff; }
+        .mqtt-packet-type.unsuback { background: #ef4444; color: #fff; }
+        .mqtt-packet-type.pingreq { background: #65a30d; color: #fff; }
+        .mqtt-packet-type.pingresp { background: #84cc16; color: #000; }
+        .mqtt-packet-type.disconnect { background: #6b7280; color: #fff; }
+        .mqtt-packet-type.unknown { background: #374151; color: #fff; }
+
+        .mqtt-topic {
+            color: #fbbf24;
+            font-size: 0.55rem;
+            font-family: monospace;
+        }
+
+        .mqtt-qos {
+            color: #94a3b8;
+            font-size: 0.5rem;
+        }
+
+        .mqtt-payload-preview {
+            color: #7dd3c0;
+            font-size: 0.55rem;
+            margin-top: 2px;
+            padding: 2px 4px;
+            background: rgba(125, 211, 192, 0.1);
+            border-radius: 2px;
+            max-height: 40px;
+            overflow: hidden;
+        }
+
+        .mini-log-entry.mqtt-connect { border-left-color: #2563eb; }
+        .mini-log-entry.mqtt-connack { border-left-color: #16a34a; }
+        .mini-log-entry.mqtt-publish { border-left-color: #7c3aed; }
+        .mini-log-entry.mqtt-subscribe { border-left-color: #0891b2; }
+        .mini-log-entry.mqtt-ping { border-left-color: #65a30d; }
+        .mini-log-entry.mqtt-disconnect { border-left-color: #6b7280; }
+        .mini-log-entry.mqtt-error { border-left-color: #ef4444; }
+
+        .mqtt-connection-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.6rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-bottom: 6px;
+        }
+
+        .mqtt-connection-indicator.connected {
+            background: rgba(22, 163, 74, 0.2);
+            color: #22c55e;
+        }
+
+        .mqtt-connection-indicator.disconnected {
+            background: rgba(107, 114, 128, 0.2);
+            color: #9ca3af;
+        }
+
+        .mqtt-connection-indicator.connecting {
+            background: rgba(37, 99, 235, 0.2);
+            color: #3b82f6;
+        }
+
         /* Filter Toggle */
         .filter-section {
             background: #2d2d2d;
@@ -2197,6 +2276,50 @@ document.getElementById('openChat').onclick = function() {
                     </button>
                 </div>
             </div>
+
+            <!-- MQTT Monitor -->
+            <div class="config-panel collapsible collapsed" id="mqttPanel">
+                <h3 class="section-header" onclick="safariDebug.toggleSection('mqtt')">
+                    <span class="section-icon">&#128225;</span>
+                    <span>MQTT</span>
+                    <span class="section-status" id="mqttStatusDot"></span>
+                    <span class="section-toggle">&#9660;</span>
+                </h3>
+                <div class="section-summary" id="mqttSummary">
+                    <span class="metric-badge" id="mqttConnBadge">No MQTT</span>
+                    <span class="metric-badge" id="mqttMsgBadge">0 msgs</span>
+                </div>
+                <div class="section-content" id="mqttContent">
+                    <div class="mqtt-connection-indicator disconnected" id="mqttConnIndicator">
+                        <span>&#9679;</span> <span id="mqttConnState">Not detected</span>
+                    </div>
+                    <div class="config-item">
+                        <span class="config-label">Connections</span>
+                        <span class="config-value" id="mqttConnCount">0</span>
+                    </div>
+                    <div class="config-item">
+                        <span class="config-label">Published</span>
+                        <span class="config-value" id="mqttPubCount">0</span>
+                    </div>
+                    <div class="config-item">
+                        <span class="config-label">Received</span>
+                        <span class="config-value" id="mqttRecvCount">0</span>
+                    </div>
+                    <div class="config-item">
+                        <span class="config-label">Subscribes</span>
+                        <span class="config-value" id="mqttSubCount">0</span>
+                    </div>
+                    <div class="config-item">
+                        <span class="config-label">Pings</span>
+                        <span class="config-value" id="mqttPingCount">0</span>
+                    </div>
+                    <div class="config-item">
+                        <span class="config-label">Broker</span>
+                        <span class="config-value" id="mqttBrokerUrl" style="font-size: 0.55rem; word-break: break-all;">-</span>
+                    </div>
+                    <div class="mini-log" id="mqttLogContainer"></div>
+                </div>
+            </div>
         </div>
 
         <!-- Column 2 - Console Logs (top) -->
@@ -3469,6 +3592,18 @@ document.getElementById('openChat').onclick = function() {
             wsTotalMessages: { sent: 0, received: 0 },
             zombieCheckInterval: null,
 
+            // MQTT tracking
+            mqttConnections: new Map(),
+            mqttStats: {
+                connections: 0,
+                published: 0,
+                received: 0,
+                subscribes: 0,
+                pings: 0,
+                topics: new Set()
+            },
+            mqttState: 'disconnected', // disconnected, connecting, connected
+
             // Visibility tracking
             visibilityState: document.visibilityState,
             visibilityTransitions: 0,
@@ -3486,7 +3621,7 @@ document.getElementById('openChat').onclick = function() {
             storageResults: null,
 
             // Section collapse state
-            collapsedSections: new Set(['wsMonitor', 'visibility', 'browser', 'networkStatus', 'storage']),
+            collapsedSections: new Set(['wsMonitor', 'visibility', 'browser', 'networkStatus', 'storage', 'mqtt']),
 
             // Initialize all Safari debug features
             init: function() {
@@ -3577,6 +3712,26 @@ document.getElementById('openChat').onclick = function() {
                         self.wsTotalOpened++;
                         self.logWsEvent(wsId, 'open', { url: url.substring(0, 40) });
                         self.updateWsUI();
+
+                        // Check if this is an MQTT connection and track it
+                        if (self.isMqttUrl(url)) {
+                            wsData.isMqtt = true;
+                            if (!self.mqttConnections.has(wsId)) {
+                                self.mqttConnections.set(wsId, {
+                                    wsId: wsId,
+                                    state: 'connecting',
+                                    clientId: null,
+                                    broker: url,
+                                    topics: new Set()
+                                });
+                            } else {
+                                self.mqttConnections.get(wsId).broker = url;
+                            }
+                            // Update broker URL in UI
+                            document.getElementById('mqttBrokerUrl').textContent =
+                                url.length > 40 ? url.substring(0, 40) + '...' : url;
+                            debugTools.addLog('events', 'MQTT WebSocket opened', { url: url.substring(0, 50) }, 'info');
+                        }
                     });
 
                     // Intercept onclose
@@ -3596,6 +3751,11 @@ document.getElementById('openChat').onclick = function() {
                             wasClean: event.wasClean
                         });
                         self.updateWsUI();
+
+                        // Handle MQTT connection close
+                        if (wsData.isMqtt) {
+                            self.onMqttWsClose(wsId);
+                        }
 
                         // Correlate with visibility state
                         if (document.visibilityState === 'hidden') {
@@ -3620,15 +3780,32 @@ document.getElementById('openChat').onclick = function() {
                         wsData.markedZombie = false; // Clear zombie flag on activity
                         self.wsTotalMessages.received++;
 
+                        // Try to process as MQTT first
+                        let isMqtt = false;
+                        if (wsData.isMqtt || self.isMqttUrl(url)) {
+                            wsData.isMqtt = true;
+                            // Handle different data types for MQTT parsing
+                            if (event.data instanceof Blob) {
+                                event.data.arrayBuffer().then(function(buffer) {
+                                    self.processMqttMessage(wsId, buffer, 'received');
+                                });
+                                isMqtt = true;
+                            } else if (event.data instanceof ArrayBuffer) {
+                                isMqtt = self.processMqttMessage(wsId, event.data, 'received');
+                            } else if (typeof event.data === 'string') {
+                                isMqtt = self.processMqttMessage(wsId, event.data, 'received');
+                            }
+                        }
+
                         let msgPreview = '';
                         try {
                             if (typeof event.data === 'string') {
                                 msgPreview = event.data.substring(0, 150);
                                 if (event.data.length > 150) msgPreview += '...';
                             } else if (event.data instanceof Blob) {
-                                msgPreview = '[Blob: ' + event.data.size + ' bytes]';
+                                msgPreview = '[Blob: ' + event.data.size + ' bytes]' + (isMqtt ? ' (MQTT)' : '');
                             } else if (event.data instanceof ArrayBuffer) {
-                                msgPreview = '[ArrayBuffer: ' + event.data.byteLength + ' bytes]';
+                                msgPreview = '[ArrayBuffer: ' + event.data.byteLength + ' bytes]' + (isMqtt ? ' (MQTT)' : '');
                             }
                         } catch (e) {
                             msgPreview = '[Unable to read]';
@@ -3646,15 +3823,32 @@ document.getElementById('openChat').onclick = function() {
                         wsData.markedZombie = false;
                         self.wsTotalMessages.sent++;
 
+                        // Try to process as MQTT first
+                        let isMqtt = false;
+                        if (wsData.isMqtt || self.isMqttUrl(url)) {
+                            wsData.isMqtt = true;
+                            if (data instanceof ArrayBuffer) {
+                                isMqtt = self.processMqttMessage(wsId, data, 'sent');
+                            } else if (typeof data === 'string') {
+                                isMqtt = self.processMqttMessage(wsId, data, 'sent');
+                            } else if (data instanceof Blob) {
+                                // For Blob, we process async but mark as MQTT
+                                data.arrayBuffer().then(function(buffer) {
+                                    self.processMqttMessage(wsId, buffer, 'sent');
+                                });
+                                isMqtt = true;
+                            }
+                        }
+
                         let msgPreview = '';
                         try {
                             if (typeof data === 'string') {
                                 msgPreview = data.substring(0, 150);
                                 if (data.length > 150) msgPreview += '...';
                             } else if (data instanceof Blob) {
-                                msgPreview = '[Blob: ' + data.size + ' bytes]';
+                                msgPreview = '[Blob: ' + data.size + ' bytes]' + (isMqtt ? ' (MQTT)' : '');
                             } else if (data instanceof ArrayBuffer) {
-                                msgPreview = '[ArrayBuffer: ' + data.byteLength + ' bytes]';
+                                msgPreview = '[ArrayBuffer: ' + data.byteLength + ' bytes]' + (isMqtt ? ' (MQTT)' : '');
                             }
                         } catch (e) {
                             msgPreview = '[Unable to read]';
@@ -4217,6 +4411,461 @@ document.getElementById('openChat').onclick = function() {
                 }
             },
 
+            // ========================================
+            // MQTT Protocol Parser & Monitor
+            // ========================================
+
+            // MQTT packet type constants
+            MQTT_PACKET_TYPES: {
+                1: 'CONNECT',
+                2: 'CONNACK',
+                3: 'PUBLISH',
+                4: 'PUBACK',
+                5: 'PUBREC',
+                6: 'PUBREL',
+                7: 'PUBCOMP',
+                8: 'SUBSCRIBE',
+                9: 'SUBACK',
+                10: 'UNSUBSCRIBE',
+                11: 'UNSUBACK',
+                12: 'PINGREQ',
+                13: 'PINGRESP',
+                14: 'DISCONNECT',
+                15: 'AUTH'
+            },
+
+            // Detect if a WebSocket URL is likely MQTT
+            isMqttUrl: function(url) {
+                const mqttPatterns = [
+                    /mqtt/i,
+                    /wss?:\/\/[^\/]*:\d*(443|8083|8084|8883|1883)/,
+                    /imi.*connect/i,
+                    /webex.*connect/i,
+                    /message.*broker/i
+                ];
+                return mqttPatterns.some(p => p.test(url));
+            },
+
+            // Parse MQTT packet from binary data
+            parseMqttPacket: function(data) {
+                try {
+                    let bytes;
+                    if (data instanceof ArrayBuffer) {
+                        bytes = new Uint8Array(data);
+                    } else if (data instanceof Uint8Array) {
+                        bytes = data;
+                    } else if (typeof data === 'string') {
+                        // Try to detect if it's binary disguised as string
+                        if (data.length >= 2) {
+                            const firstByte = data.charCodeAt(0);
+                            const packetType = (firstByte >> 4) & 0x0F;
+                            if (packetType >= 1 && packetType <= 15) {
+                                bytes = new Uint8Array(data.length);
+                                for (let i = 0; i < data.length; i++) {
+                                    bytes[i] = data.charCodeAt(i) & 0xFF;
+                                }
+                            } else {
+                                return null; // Not MQTT
+                            }
+                        } else {
+                            return null;
+                        }
+                    } else {
+                        return null;
+                    }
+
+                    if (bytes.length < 2) return null;
+
+                    const firstByte = bytes[0];
+                    const packetType = (firstByte >> 4) & 0x0F;
+                    const flags = firstByte & 0x0F;
+
+                    if (packetType < 1 || packetType > 15) return null;
+
+                    const typeName = this.MQTT_PACKET_TYPES[packetType] || 'UNKNOWN';
+
+                    // Decode remaining length (variable byte integer)
+                    let remainingLength = 0;
+                    let multiplier = 1;
+                    let pos = 1;
+                    let encodedByte;
+
+                    do {
+                        if (pos >= bytes.length) return null;
+                        encodedByte = bytes[pos++];
+                        remainingLength += (encodedByte & 127) * multiplier;
+                        multiplier *= 128;
+                        if (multiplier > 128 * 128 * 128) return null;
+                    } while ((encodedByte & 128) !== 0);
+
+                    const packet = {
+                        type: packetType,
+                        typeName: typeName,
+                        flags: flags,
+                        remainingLength: remainingLength,
+                        raw: bytes
+                    };
+
+                    // Parse specific packet types
+                    const payloadStart = pos;
+                    const payload = bytes.slice(payloadStart);
+
+                    switch (packetType) {
+                        case 1: // CONNECT
+                            packet.details = this.parseConnect(payload);
+                            break;
+                        case 2: // CONNACK
+                            packet.details = this.parseConnack(payload);
+                            break;
+                        case 3: // PUBLISH
+                            packet.details = this.parsePublish(payload, flags);
+                            break;
+                        case 8: // SUBSCRIBE
+                            packet.details = this.parseSubscribe(payload);
+                            break;
+                        case 9: // SUBACK
+                            packet.details = this.parseSuback(payload);
+                            break;
+                        case 12: // PINGREQ
+                        case 13: // PINGRESP
+                            packet.details = { note: 'Keep-alive' };
+                            break;
+                        case 14: // DISCONNECT
+                            packet.details = { note: 'Connection closing' };
+                            break;
+                    }
+
+                    return packet;
+                } catch (e) {
+                    console.warn('MQTT parse error:', e);
+                    return null;
+                }
+            },
+
+            parseConnect: function(payload) {
+                try {
+                    // Protocol name length (2 bytes) + protocol name
+                    const protoNameLen = (payload[0] << 8) | payload[1];
+                    const protoName = String.fromCharCode.apply(null, payload.slice(2, 2 + protoNameLen));
+                    const pos = 2 + protoNameLen;
+
+                    const protoVersion = payload[pos];
+                    const connectFlags = payload[pos + 1];
+                    const keepAlive = (payload[pos + 2] << 8) | payload[pos + 3];
+
+                    // Client ID starts after variable header
+                    let clientIdPos = pos + 4;
+                    const clientIdLen = (payload[clientIdPos] << 8) | payload[clientIdPos + 1];
+                    clientIdPos += 2;
+                    const clientId = String.fromCharCode.apply(null, payload.slice(clientIdPos, clientIdPos + clientIdLen));
+
+                    return {
+                        protocol: protoName,
+                        version: protoVersion,
+                        keepAlive: keepAlive,
+                        clientId: clientId.substring(0, 30) + (clientId.length > 30 ? '...' : ''),
+                        cleanSession: !!(connectFlags & 0x02)
+                    };
+                } catch (e) {
+                    return { error: 'Parse failed' };
+                }
+            },
+
+            parseConnack: function(payload) {
+                try {
+                    const sessionPresent = !!(payload[0] & 0x01);
+                    const returnCode = payload[1];
+                    const returnCodes = {
+                        0: 'Accepted',
+                        1: 'Unacceptable protocol',
+                        2: 'Identifier rejected',
+                        3: 'Server unavailable',
+                        4: 'Bad credentials',
+                        5: 'Not authorized'
+                    };
+                    return {
+                        sessionPresent: sessionPresent,
+                        returnCode: returnCode,
+                        status: returnCodes[returnCode] || 'Unknown'
+                    };
+                } catch (e) {
+                    return { error: 'Parse failed' };
+                }
+            },
+
+            parsePublish: function(payload, flags) {
+                try {
+                    const qos = (flags >> 1) & 0x03;
+                    const retain = !!(flags & 0x01);
+                    const dup = !!(flags & 0x08);
+
+                    // Topic name
+                    const topicLen = (payload[0] << 8) | payload[1];
+                    const topic = String.fromCharCode.apply(null, payload.slice(2, 2 + topicLen));
+
+                    let pos = 2 + topicLen;
+
+                    // Packet ID (only for QoS > 0)
+                    let packetId = null;
+                    if (qos > 0 && payload.length > pos + 1) {
+                        packetId = (payload[pos] << 8) | payload[pos + 1];
+                        pos += 2;
+                    }
+
+                    // Payload
+                    const messagePayload = payload.slice(pos);
+                    let payloadStr;
+                    try {
+                        payloadStr = new TextDecoder().decode(messagePayload);
+                        // Try to parse as JSON
+                        try {
+                            const json = JSON.parse(payloadStr);
+                            payloadStr = JSON.stringify(json).substring(0, 100);
+                        } catch (e) {
+                            payloadStr = payloadStr.substring(0, 100);
+                        }
+                    } catch (e) {
+                        payloadStr = '[Binary: ' + messagePayload.length + ' bytes]';
+                    }
+
+                    return {
+                        topic: topic,
+                        qos: qos,
+                        retain: retain,
+                        dup: dup,
+                        packetId: packetId,
+                        payload: payloadStr + (payloadStr.length >= 100 ? '...' : '')
+                    };
+                } catch (e) {
+                    return { error: 'Parse failed' };
+                }
+            },
+
+            parseSubscribe: function(payload) {
+                try {
+                    // Packet ID
+                    const packetId = (payload[0] << 8) | payload[1];
+                    let pos = 2;
+
+                    const topics = [];
+                    while (pos < payload.length) {
+                        const topicLen = (payload[pos] << 8) | payload[pos + 1];
+                        pos += 2;
+                        const topic = String.fromCharCode.apply(null, payload.slice(pos, pos + topicLen));
+                        pos += topicLen;
+                        const qos = payload[pos++];
+                        topics.push({ topic: topic, qos: qos });
+                    }
+
+                    return {
+                        packetId: packetId,
+                        topics: topics.map(t => t.topic + ' (QoS ' + t.qos + ')').join(', ')
+                    };
+                } catch (e) {
+                    return { error: 'Parse failed' };
+                }
+            },
+
+            parseSuback: function(payload) {
+                try {
+                    const packetId = (payload[0] << 8) | payload[1];
+                    const returnCodes = Array.from(payload.slice(2)).map(c =>
+                        c === 0x80 ? 'Failure' : 'QoS ' + c
+                    );
+                    return {
+                        packetId: packetId,
+                        results: returnCodes.join(', ')
+                    };
+                } catch (e) {
+                    return { error: 'Parse failed' };
+                }
+            },
+
+            // Process WebSocket message for MQTT
+            processMqttMessage: function(wsId, data, direction) {
+                const packet = this.parseMqttPacket(data);
+                if (!packet) return false;
+
+                // Track connection in MQTT map
+                if (!this.mqttConnections.has(wsId)) {
+                    this.mqttConnections.set(wsId, {
+                        wsId: wsId,
+                        state: 'connecting',
+                        clientId: null,
+                        broker: null,
+                        topics: new Set()
+                    });
+                }
+
+                const conn = this.mqttConnections.get(wsId);
+
+                // Update stats based on packet type
+                switch (packet.typeName) {
+                    case 'CONNECT':
+                        this.mqttStats.connections++;
+                        conn.state = 'connecting';
+                        if (packet.details && packet.details.clientId) {
+                            conn.clientId = packet.details.clientId;
+                        }
+                        this.mqttState = 'connecting';
+                        break;
+
+                    case 'CONNACK':
+                        if (packet.details && packet.details.returnCode === 0) {
+                            conn.state = 'connected';
+                            this.mqttState = 'connected';
+                            debugTools.addLog('events', 'MQTT connected', packet.details, 'success');
+                        } else {
+                            conn.state = 'failed';
+                            this.mqttState = 'disconnected';
+                            debugTools.addLog('events', 'MQTT connection failed', packet.details, 'error');
+                            statusOrb.logError();
+                        }
+                        break;
+
+                    case 'PUBLISH':
+                        if (direction === 'sent') {
+                            this.mqttStats.published++;
+                        } else {
+                            this.mqttStats.received++;
+                        }
+                        if (packet.details && packet.details.topic) {
+                            this.mqttStats.topics.add(packet.details.topic);
+                            conn.topics.add(packet.details.topic);
+                        }
+                        break;
+
+                    case 'SUBSCRIBE':
+                        this.mqttStats.subscribes++;
+                        break;
+
+                    case 'PINGREQ':
+                    case 'PINGRESP':
+                        this.mqttStats.pings++;
+                        break;
+
+                    case 'DISCONNECT':
+                        conn.state = 'disconnected';
+                        this.mqttState = 'disconnected';
+                        debugTools.addLog('events', 'MQTT disconnected', null, 'warn');
+                        break;
+                }
+
+                this.logMqttEvent(wsId, packet, direction);
+                this.updateMqttUI();
+
+                return true;
+            },
+
+            logMqttEvent: function(wsId, packet, direction) {
+                const timestamp = new Date().toLocaleTimeString();
+                const container = document.getElementById('mqttLogContainer');
+                if (!container) return;
+
+                const entry = document.createElement('div');
+                let entryClass = 'mini-log-entry mqtt-' + packet.typeName.toLowerCase();
+
+                const dirIcon = direction === 'sent' ? '↑' : '↓';
+                const dirClass = direction === 'sent' ? 'sent' : 'received';
+
+                let detailsHtml = '';
+                if (packet.details) {
+                    if (packet.details.topic) {
+                        detailsHtml += '<div class="mqtt-topic">' + this.escapeHtml(packet.details.topic) + '</div>';
+                    }
+                    if (packet.details.payload) {
+                        detailsHtml += '<div class="mqtt-payload-preview">' + this.escapeHtml(packet.details.payload) + '</div>';
+                    }
+                    if (packet.details.clientId) {
+                        detailsHtml += '<div class="mini-log-data">Client: ' + this.escapeHtml(packet.details.clientId) + '</div>';
+                    }
+                    if (packet.details.status) {
+                        detailsHtml += '<div class="mini-log-data">' + this.escapeHtml(packet.details.status) + '</div>';
+                    }
+                    if (packet.details.topics) {
+                        detailsHtml += '<div class="mini-log-data">Topics: ' + this.escapeHtml(packet.details.topics) + '</div>';
+                    }
+                }
+
+                entry.className = entryClass;
+                entry.innerHTML =
+                    '<div class="mini-log-time">' + timestamp + '</div>' +
+                    '<div class="mini-log-msg">' +
+                    '<span class="ws-direction ' + dirClass + '">' + dirIcon + '</span>' +
+                    '<span class="mqtt-packet-type ' + packet.typeName.toLowerCase() + '">' + packet.typeName + '</span>' +
+                    (packet.details && packet.details.qos !== undefined ? '<span class="mqtt-qos">QoS ' + packet.details.qos + '</span>' : '') +
+                    '</div>' +
+                    detailsHtml;
+
+                container.appendChild(entry);
+                container.scrollTop = container.scrollHeight;
+            },
+
+            updateMqttUI: function() {
+                // Connection count
+                document.getElementById('mqttConnCount').textContent = this.mqttStats.connections;
+                document.getElementById('mqttPubCount').textContent = this.mqttStats.published;
+                document.getElementById('mqttRecvCount').textContent = this.mqttStats.received;
+                document.getElementById('mqttSubCount').textContent = this.mqttStats.subscribes;
+                document.getElementById('mqttPingCount').textContent = this.mqttStats.pings;
+
+                // Connection state indicator
+                const indicator = document.getElementById('mqttConnIndicator');
+                const stateText = document.getElementById('mqttConnState');
+
+                indicator.className = 'mqtt-connection-indicator ' + this.mqttState;
+                stateText.textContent = this.mqttState === 'connected' ? 'Connected' :
+                                        this.mqttState === 'connecting' ? 'Connecting...' : 'Not detected';
+
+                // Summary badges
+                const connBadge = document.getElementById('mqttConnBadge');
+                if (this.mqttState === 'connected') {
+                    connBadge.textContent = 'Connected';
+                    connBadge.className = 'metric-badge online';
+                } else if (this.mqttState === 'connecting') {
+                    connBadge.textContent = 'Connecting';
+                    connBadge.className = 'metric-badge warning';
+                } else if (this.mqttStats.connections > 0) {
+                    connBadge.textContent = 'Disconnected';
+                    connBadge.className = 'metric-badge offline';
+                } else {
+                    connBadge.textContent = 'No MQTT';
+                    connBadge.className = 'metric-badge';
+                }
+
+                const msgTotal = this.mqttStats.published + this.mqttStats.received;
+                document.getElementById('mqttMsgBadge').textContent = msgTotal + ' msgs';
+
+                // Status dot
+                const statusDot = document.getElementById('mqttStatusDot');
+                if (this.mqttState === 'connected') {
+                    statusDot.className = 'section-status';
+                } else if (this.mqttState === 'connecting' || this.mqttStats.connections > 0) {
+                    statusDot.className = 'section-status warning';
+                } else {
+                    statusDot.className = 'section-status';
+                }
+
+                // Broker URL (from first active connection)
+                const activeConn = [...this.mqttConnections.values()].find(c => c.state === 'connected');
+                if (activeConn && activeConn.broker) {
+                    document.getElementById('mqttBrokerUrl').textContent = activeConn.broker;
+                }
+            },
+
+            onMqttWsClose: function(wsId) {
+                const conn = this.mqttConnections.get(wsId);
+                if (conn) {
+                    conn.state = 'disconnected';
+                    // Check if any MQTT connections still active
+                    const anyActive = [...this.mqttConnections.values()].some(c => c.state === 'connected');
+                    if (!anyActive) {
+                        this.mqttState = 'disconnected';
+                    }
+                    this.updateMqttUI();
+                }
+            },
+
             // Utility
             escapeHtml: function(text) {
                 const div = document.createElement('div');
@@ -4234,6 +4883,16 @@ document.getElementById('openChat').onclick = function() {
                         messages: this.wsTotalMessages,
                         zombiesDetected: [...this.websockets.values()].filter(w => w.markedZombie).length
                     },
+                    mqtt: {
+                        state: this.mqttState,
+                        connections: this.mqttStats.connections,
+                        published: this.mqttStats.published,
+                        received: this.mqttStats.received,
+                        subscribes: this.mqttStats.subscribes,
+                        pings: this.mqttStats.pings,
+                        topics: [...this.mqttStats.topics],
+                        activeConnections: [...this.mqttConnections.values()].filter(c => c.state === 'connected').length
+                    },
                     visibility: {
                         state: this.visibilityState,
                         transitions: this.visibilityTransitions,
@@ -4250,7 +4909,7 @@ document.getElementById('openChat').onclick = function() {
 
             // Clear mini-logs
             clearLogs: function() {
-                ['wsLogContainer', 'visLogContainer', 'netLogContainer'].forEach(function(id) {
+                ['wsLogContainer', 'visLogContainer', 'netLogContainer', 'mqttLogContainer'].forEach(function(id) {
                     const el = document.getElementById(id);
                     if (el) el.innerHTML = '';
                 });
