@@ -2,7 +2,7 @@
 
 A simple, single-file debug dashboard for testing Webex Connect (IMI Chat) chatbot widgets. No build process, no dependencies - just open and go.
 
-> **Disclaimer:** This is not an official Cisco or Webex product. I'm just a Webex Collaboration Engineer who wanted more visibility when configuring webchat. Feel free to reach out with feedback or if you get stuck — no guarantees but I'm happy to try to help!
+> **Disclaimer:** This is not an official Cisco or Webex product. I'm just a Webex Collaboration Engineer who wanted more visibility when configuring webchat. Feel free to reach out at [chris@klopconsulting.com](mailto:chris@klopconsulting.com) with feedback or if you get stuck — no guarantees but I'm happy to try to help!
 
 ## 5-Minute Setup
 
